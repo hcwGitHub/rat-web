@@ -343,7 +343,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="id"
-                  label="ID"
+                  label="ID."
                   width="150">
                 </el-table-column>
                 <el-table-column

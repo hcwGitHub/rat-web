@@ -14,7 +14,9 @@ export {
 }
 // 新系统------>
 // let ipPath = 'localhost:8080';       //本地
-let ipPath = 'git.iman.io';//uat
+// let ipPath = 'git.iman.io';  // uat
+let ipPath = 'oc.mobility.chunwo.com';  //api live Server
+
 // let ipPath = 'cms4k.anyplex.com';       //live
 // 新系统------> END
 

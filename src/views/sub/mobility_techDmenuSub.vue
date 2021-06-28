@@ -274,7 +274,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="id"
-                  label="ID"
+                  label="ID."
                   width="150">
                 </el-table-column>
                 <el-table-column
@@ -573,11 +573,13 @@
           console.log("init()");
           // console.log("user_name ->" + event.data.user.name);
           // // // 保存用户信息
-          // window.localStorage.setItem("user_name", "oc_testing");
-          window.localStorage.setItem("user_name", event.data.user.name);
+          window.localStorage.setItem("user_name", "oc_testing");
+          // window.localStorage.setItem("user_name", event.data.user.name);
           // 查询 project information projects
           // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" +  "kaifaceshi";  // testing
-          let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" + event.data.project.identifier;  // testing
+          // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" + event.data.project.identifier;  // testing
+          let url =  "https://mobility.chunwo.com/api/v3" + "/projects/" + event.data.project.identifier;  // live
+
           console.log("_open_project_session",getCookie("_open_project_session"));
           console.log("url-> " + url);
           // withCredentials: true, 携带 cookies
@@ -618,7 +620,9 @@
            ],
            * */
           // let url2 =  "https://dev.hkdwss.com/api/v3" + "/users/" +  "2";  // testing, 测试可以先写死 1/2/3 这样子...
-          let url2 =  "https://dev.hkdwss.com/api/v3" + "/users/" + event.data.user.id ;  // prod, 从event.data.user 对象中拿到id
+          // let url2 =  "https://dev.hkdwss.com/api/v3" + "/users/" + event.data.user.id ;  // uat, 从event.data.user 对象中拿到id
+          let url2 =  "https://mobility.chunwo.com/api/v3" + "/users/" + event.data.user.id ;  // live
+
           console.log(" api/v3/user/{user_id} url->" + url2) ;
 
           this.$axios.get(url2,
