@@ -107,9 +107,9 @@
 
           console.log("init()");
           // 查询 project information projects
-          // let url = "https://dev.hkdwss.com/api/v3" + "/projects/" + "kaifaceshi";  // testing
+          let url = "https://dev.hkdwss.com/api/v3" + "/projects/" + "kaifaceshi";  // testing
           // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" + event.data.project.identifier;  // testing. uat
-          let url =  "https://mobility.chunwo.com/api/v3" + "/projects/" + event.data.project.identifier;  // live
+          // let url =  "https://mobility.chunwo.com/api/v3" + "/projects/" + event.data.project.identifier;  // live
 
           console.log("_open_project_session", getCookie("_open_project_session"));
           console.log("url-> " + url);
