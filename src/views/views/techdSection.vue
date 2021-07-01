@@ -72,7 +72,7 @@
           <router-link to="/techdSection/changePassword">
             <el-button plain>Change Password</el-button>
           </router-link>
-          <el-button plain @click="loginOut">Log Out</el-button>
+          <el-button plain @click="loginOut" style="margin-top: 10px;">Log Out</el-button>
        <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>
        </el-popover>
 
