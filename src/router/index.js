@@ -101,6 +101,11 @@ export const constantRouter = [
         name: 'viewTwcDetail',
         component: () => import('@/views/views/viewTwcDetail')
       },
+      {
+        path: 'changePassword',
+        name: 'changePassword',
+        component: () => import('@/views/views/changePassword')
+      },
     ]
   },
 

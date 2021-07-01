@@ -86,6 +86,8 @@
               // window.localStorage.setItem("creator_email",params.account);
               // oc 用戶名( 也是email ) ; 保存起來;
               window.localStorage.setItem("oc_user_email",params.account);
+              // 保存当前用户id
+              window.localStorage.setItem("id",response.data.id);
 
               // 提示
               this.$message.success("login success");

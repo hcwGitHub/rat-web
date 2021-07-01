@@ -50,10 +50,10 @@
             <el-radio v-model="radio" label="rejected">Rejected</el-radio>
           </span>
           <!-- pending 或者 rejected 可以填写备注-->
-          <div v-if="radio==='pending' || radio==='rejected'">
+          <div v-if="radio==='pending' || radio==='rejected'" style="width: 270px; margin: 0 auto">
             <br>
-            <div v-if="radio==='pending'" style="text-align: left;padding-left: 60px"> Remarks </div>
-            <div v-if="radio==='rejected'" style="text-align: left;padding-left: 60px"> Reason Of Rejection </div>
+            <div v-if="radio==='pending'" style="text-align: left;"> Remarks </div>
+            <div v-if="radio==='rejected'" style="text-align: left;"> Reason Of Rejection </div>
 <!--            <div style="text-align: left;padding-left: 60px"> Remarks </div>-->
             <br>
             <el-input

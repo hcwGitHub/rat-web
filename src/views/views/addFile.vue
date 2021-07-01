@@ -31,7 +31,7 @@
             <td class="td1"><span>Creator</span></td>
             <td class="td2">
               {{fileObj.creator}}
-            </td>
+            </td>Creator
           </tr>
           <tr>
             <td class="td1"><span>Display</span></td>
