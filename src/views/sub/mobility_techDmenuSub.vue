@@ -573,8 +573,8 @@
           console.log("init()");
           // console.log("user_name ->" + event.data.user.name);
           // // // 保存用户信息
-          window.localStorage.setItem("user_name", "oc_testing");
-          // window.localStorage.setItem("user_name", event.data.user.name);
+          // window.localStorage.setItem("user_name", "oc_testing"); // testing 環境
+          window.localStorage.setItem("user_name", event.data.user.name); // pro or uat 環境
           // 查询 project information projects
           // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" +  "kaifaceshi";  // testing
           // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" + event.data.project.identifier;  // testing
