@@ -54,8 +54,8 @@
           <!-- pending 或者 rejected 可以填写备注-->
           <div v-if="radio==='pending' || radio==='rejected'" style="width: 270px; margin: 0 auto">
             <br>
-            <div v-if="radio==='pending'" style="text-align: left;"> Remarks </div>
-            <div v-if="radio==='rejected'" style="text-align: left;"> Reason Of Rejection </div>
+            <div v-if="radio==='pending'" style="text-align: left;padding-left: 20%"> Remarks </div>
+            <div v-if="radio==='rejected'" style="text-align: left;padding-left: 20%"> Reason Of Rejection </div>
 <!--            <div style="text-align: left;padding-left: 60px"> Remarks </div>-->
             <br>
 <!--            <span style="display:block;text-align: left">Remarks</span>-->
@@ -77,7 +77,7 @@
       </div>
     </div>
     <!-- reject 信息提示, 如果存在 -->
-    <div style="text-align:left;padding-left:16px;font:bold" v-if="this.rat_hir.reason_of_rejected != null">
+    <div style="text-align:left;padding-left:16px;font-weight:bold" v-if="this.rat_hir.reason_of_rejected != null">
      Reason of Rejection
       <br/>
       <span> {{this.rat_hir.reason_of_rejected}}</span>
