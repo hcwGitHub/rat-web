@@ -52,8 +52,8 @@
           <!-- pending 或者 rejected 可以填写备注-->
           <div v-if="radio==='pending' || radio==='rejected'">
             <br>
-            <div v-if="radio==='pending'" style="text-align: left;padding-left: 60px"> Remarks </div>
-            <div v-if="radio==='rejected'" style="text-align: left;padding-left: 60px"> Reason Of Rejection </div>
+            <div v-if="radio==='pending'" style="text-align: left;padding-left: 20%"> Remarks </div>
+            <div v-if="radio==='rejected'" style="text-align: left;padding-left: 20%"> Reason Of Rejection </div>
 <!--            <div style="text-align: left;padding-left: 60px"> Remarks </div>-->
             <br>
             <el-input
@@ -73,7 +73,7 @@
     </div>
 
     <!-- reject 信息提示, 如果存在 -->
-    <div style="text-align:left;padding-left:16px;font:bold" v-if="this.rat_twc.reason_of_rejected != null">
+    <div style="text-align:left;padding-left:16px;font-weight:bold" v-if="this.rat_twc.reason_of_rejected != null">
       Reason of Rejection
       <br/>
       <span> {{this.rat_twc.reason_of_rejected}}</span>
