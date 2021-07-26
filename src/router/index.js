@@ -171,6 +171,13 @@ export const constantRouter = [
     ]
   },
 
+  // changePassword
+  {
+    path: '/changePassword',
+    name: 'changePassword',
+    component: () => import('@/views/views/changePassword')
+  },
+
   {
     path: '/404',
     name: 'notFound',

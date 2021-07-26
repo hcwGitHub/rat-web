@@ -179,7 +179,7 @@
           </div>
           <div class="button_commit" style="text-align: left;padding-top: 10px;">
             <el-button @click="submitEntry" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Create</el-button>
-            <router-link to="/mobility_techDmenuSub">
+            <router-link :to="{name:'mobility_techDmenuSub',query:{identifier:identifier}}">
               <el-button>Cancel</el-button>
             </router-link>
 
@@ -197,6 +197,10 @@
     export default {
         name: "addEntry",
          mounted: function () {
+          // 21/07/2021 修復郵件鏈接
+          this.identifier = this.$route.query.identifier;
+          console.log("identifier->" + this.identifier);
+
           /**
            * user_name   -- mobility
              user_email -- mobility
@@ -241,6 +245,9 @@
        },
         data(){
           return{
+            // 21/07/2021 修復郵件鏈接
+            identifier:'',
+
             user_role:'member',
             newData:{},
             fileList: [],  // file list
@@ -248,6 +255,9 @@
             file:[], // files
             file_name:'', // upload files
             rat_twc:{
+              // 21/07/2021 修復郵件鏈接
+              identifier:'',
+
               type:'',
               approve:'',
               project_name:'',
@@ -269,6 +279,9 @@
               creator:'' // 创建者, 未知
             },
             rat_hir:{
+              // 21/07/2021 修復郵件鏈接
+              identifier:'',
+
               type:'',
               approve:'',
               divsion:'',
@@ -362,6 +375,9 @@
                   this.rat_twc.type = 'Detail Information of Twc',
                   this.rat_twc.attachments = this.file_name;
                   console.log("rat_twc->" + this.rat_twc.remark);
+                  // 21/07/2021 修復郵件鏈接
+                  this.rat_twc.identifier = this.identifier;
+
                   this.$axios.post(url, this.rat_twc, {
                       headers: {
                         // 'signature': sign
@@ -376,7 +392,7 @@
                         type: 'success'
                       });
                       // 回到 mobility entry list
-                      this.$router.push('/mobility_techDmenuSub');
+                      this.$router.push('/mobility_techDmenuSub?identifier=' + this.identifier);
 
                     } else {
                       this.$message.error(response.data.msg);
@@ -392,6 +408,9 @@
                 this.rat_hir.type = 'HIR with proposed RAT meetings', // hir type;
                 this.rat_hir.attachments = this.file_name;
                 console.log("rat_hir->" + this.rat_hir);
+                // 21/07/2021 修復郵件鏈接
+                this.rat_hir.identifier = this.identifier;
+
                 this.$axios.post(url, this.rat_hir, {
                     headers: {
                       // 'signature': sign
@@ -405,7 +424,7 @@
                       type: 'success'
                     });
                     // 回到 mobility entry list
-                    this.$router.push('/mobility_techDmenuSub');
+                    this.$router.push('/mobility_techDmenuSub?identifier=' + this.identifier);
 
                   } else {
                     this.$message.error(response.data.msg);
@@ -421,6 +440,9 @@
                 this.rat_hir.type = 'Temporary Works Submission Schedule', // hir type;
                   this.rat_hir.attachments = this.file_name;
                 console.log("rat_hir->" + this.rat_hir);
+                // 21/07/2021 修復郵件鏈接
+                this.rat_hir.identifier = this.identifier;
+
                 this.$axios.post(url, this.rat_hir, {
                     headers: {
                       // 'signature': sign
@@ -434,7 +456,7 @@
                       type: 'success'
                     });
                     // 回到 mobility entry list
-                    this.$router.push('/mobility_techDmenuSub');
+                    this.$router.push('/mobility_techDmenuSub?identifier=' + this.identifier);
 
                   } else {
                     this.$message.error(response.data.msg);

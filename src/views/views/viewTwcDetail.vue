@@ -31,7 +31,7 @@
         </router-link>
 
         <!-- 去mobility 模块 -->
-        <router-link v-if="this.type==='mobility'" :to="{name:'editTwc',query:{id:this.id,type:'mobility'}}">
+        <router-link v-if="this.type==='mobility'" :to="{name:'editTwc',query:{id:this.id,type:'mobility',identifier:identifier}}">
           <el-button type="primary">Update/Upload</el-button>
         </router-link>
 
@@ -52,8 +52,8 @@
           <!-- pending 或者 rejected 可以填写备注-->
           <div v-if="radio==='pending' || radio==='rejected'" style="width: 270px; margin: 0 auto">
             <br>
-            <div v-if="radio==='pending'" style="text-align: left;padding-left: 20%"> Remarks </div>
-            <div v-if="radio==='rejected'" style="text-align: left;padding-left: 20%"> Reason Of Rejection </div>
+            <div v-if="radio==='pending'" style="text-align: left;"> Remarks </div>
+            <div v-if="radio==='rejected'" style="text-align: left;"> Reason Of Rejection </div>
 <!--            <div style="text-align: left;padding-left: 60px"> Remarks </div>-->
             <br>
             <el-input
@@ -309,8 +309,11 @@
     // 初始化页面
     mounted: function () {
 
+      // 21/07/2021 修復郵件鏈接
+      this.identifier = this.$route.query.identifier;
       this.id = this.$route.query.id
       this.type = this.$route.query.type;
+      console.log("identifier->" + this.identifier);
       console.log("id->" + this.id);
       console.log("type->" + this.type);
       this.rat_twc.id = this.id;
@@ -326,6 +329,8 @@
     },
     data() {
       return {
+        // 21/07/2021 修復郵件鏈接
+        identifier:'',
         twc_remark:'',
         id: 1,
         type: '',

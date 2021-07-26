@@ -15,8 +15,8 @@
     </div>
     <!-- and entity button -->
     <div  class="entry-button">
-      <router-link to="/addEntry">
-        <el-button v-if = "this.select_lable==='Detail Information of TWC / HIR with Proposed RAT Meetings'">Upload</el-button>
+      <router-link :to="{name:'addEntry',query:{identifier:identifier}}">
+        <el-button v-if = "this.select_lable==='Project Specific Information'">Upload</el-button>
       </router-link>
     </div>
 
@@ -24,7 +24,7 @@
     <!-- 主体部分 -->
     <div class="section-main">
       <el-tabs class="el-tabs-p" type="card" v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="Shared Information" name="first">
+        <el-tab-pane label="General Information" name="first">
           <!--内部选项卡-->
 
           <el-tabs  v-model="activeName2" @tab-click="findFilesByType">
@@ -99,7 +99,7 @@
           <!--内部选项卡结束-->
         </el-tab-pane>
 
-        <el-tab-pane label="Detail Information of TWC / HIR with Proposed RAT Meetings" name="second">
+        <el-tab-pane label="Project Specific Information" name="second">
           <!--内部选项卡-->
           <!-- 通过条件过滤-->
           <div class="searchByDivision" style="text-align: left;padding-bottom: 8px">
@@ -237,7 +237,7 @@
                   width="200">
                   <template slot-scope="scope">
                    <span slot="footer" class="dialog-footer">
-                          <router-link :to="{name:'viewTwcDetail',query:{id:scope.row.id,type:'mobility'}}" >
+                          <router-link :to="{name:'viewTwcDetail',query:{id:scope.row.id,type:'mobility',identifier:identifier}}" >
                                <el-button type="text" size="small">View</el-button>
                           </router-link>
                      <!--                    <el-button type="text" size="small">编辑</el-button>-->
@@ -253,7 +253,7 @@
 <!--                           <router-link :to="{name:'editTwc2',query:{id:scope.row.id,type:'oc'}}">-->
 <!--                               <el-button type="text" size="small">update</el-button>-->
 <!--                          </router-link>-->
-                       <router-link :to="{name:'editTwc',query:{id:scope.row.id,type:'mobility'}}">
+                       <router-link :to="{name:'editTwc',query:{id:scope.row.id,type:'mobility',identifier:identifier}}">
                            <el-button type="text" size="small">Update</el-button>
                        </router-link>
                     </span>
@@ -316,7 +316,7 @@
                   width="200">
                   <template slot-scope="scope">
 
-                    <router-link :to="{name:'viewHirDetail',query:{id:scope.row.id,type:'mobility',type_name:type_name}}" >
+                    <router-link :to="{name:'viewHirDetail',query:{id:scope.row.id,type:'mobility',type_name:type_name,identifier:identifier}}" >
                       <el-button @click="" type="text" size="small">View</el-button>
                       <!--                    <el-button type="text" size="small">编辑</el-button>-->
                     </router-link>
@@ -327,7 +327,7 @@
                     </span>
                     <!-- update -->
                     <span slot="footer" class="dialog-footer">
-                      <router-link :to="{name:'editHir',query:{id:scope.row.id,type:'mobility',type_name:type_name}}">
+                      <router-link :to="{name:'editHir',query:{id:scope.row.id,type:'mobility',type_name:type_name,identifier:identifier}}">
                             <el-button type="text" size="small">Update</el-button>
                        </router-link>
 <!--                      <router-link :to="{name:'editHir2',query:{id:scope.row.id,type:'oc'}}">-->
@@ -398,10 +398,9 @@
 </template>
 
 <script>
-  import {requestPath, setCookie, getCom, getCookie, mytrim, delCookie} from '@/utils/util'
-  import {getSign} from '@/utils/md5'
-  import pdf from 'vue-pdf'
-    export default {
+  import {getCookie, requestPath} from '@/utils/util'
+
+  export default {
       name: "techDmenuSub",
       mounted: function () {
         // console.log("log out");
@@ -427,9 +426,42 @@
           // }
           _this.init(event);
         });
+
+        // 21/07/2021 修復郵件鏈接
+        this.identifier = this.$route.query.identifier;
+        console.log("identifier->" + this.identifier);
+
+        /**
+         * 23/07/2021 防止跳轉頁面, 沒有調用addEventListener(), 造成默認選項卡沒有數據
+         * */
+        let type = [{label:this.editableTabs[0].title}]
+        this.findFilesByType(type[0])
+        // let searchType = [{name: '1'}]
+        this.search(this.editableTabsB[0]);
+
+      },
+      // 22/01/2021 新需求: twc_list, hir_list值發生改變時, 把approve裡的字段轉化成大寫開頭
+      watch:{
+        // 22/07/2021 新需求: Status字段, 大寫開頭
+        twc_list:function () {
+          this.$nextTick(function () {
+            for (let i = 0; i < this.twc_list.length; i++) {
+              this.twc_list[i].approve = this.firstToUpper(this.twc_list[i].approve);
+            }
+          })
+        },
+        hir_list:function () {
+          this.$nextTick(function () {
+            for (let i = 0; i < this.hir_list.length; i++) {
+              this.hir_list[i].approve = this.firstToUpper(this.hir_list[i].approve);
+            }
+          })
+        }
       },
       data() {
         return {
+          // 21/07/2021 修復郵件鏈接
+          identifier:'',
           user_role:'member', // 默认是 member 角色
           dialogVisible: false, // 删除file
           dialogVisible2: false, // approve
@@ -437,10 +469,11 @@
           hir_id:'',
           twc_id:'',
           // visibleLine:'',
-          select_lable:'Shared Information', // 选项卡选择的模块
+          select_lable:'General Information', // 选项卡选择的模块
           activeName: 'first',
-          activeName2: 'second',
-          activeName3: 'thrid',
+          // 22/07/2021 新需求: 默認選擇第一個選項 ; 之前:second
+          activeName2: '1',
+          activeName3: '1',
           type_label:'', // file 使用
           project_name:'',
           checked:true,
@@ -569,16 +602,21 @@
         };
       },
       methods: {
+        // 22/07/2021 新需求: Status字段, 大寫開頭
+        firstToUpper(str) {
+          return str.trim().toLowerCase().replace(str[0], str[0].toUpperCase());
+        },
+
         init(event) {
           console.log("init()");
           // console.log("user_name ->" + event.data.user.name);
           // // // 保存用户信息
-          // window.localStorage.setItem("user_name", "oc_testing"); // testing 環境
-          window.localStorage.setItem("user_name", event.data.user.name); // pro or uat 環境
+          window.localStorage.setItem("user_name", "oc_testing"); // testing 環境
+          // window.localStorage.setItem("user_name", event.data.user.name); // pro or uat 環境
           // 查询 project information projects
-          // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" +  "kaifaceshi";  // testing
+          let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" +  "kaifaceshi";  // testing
           // let url =  "https://dev.hkdwss.com/api/v3" + "/projects/" + event.data.project.identifier;  // testing
-          let url =  "https://mobility.chunwo.com/api/v3" + "/projects/" + event.data.project.identifier;  // live
+          // let url =  "https://mobility.chunwo.com/api/v3" + "/projects/" + event.data.project.identifier;  // live
 
           console.log("_open_project_session",getCookie("_open_project_session"));
           console.log("url-> " + url);
@@ -596,6 +634,14 @@
             window.localStorage.setItem("projectNo", response.data.projectNo);
             window.localStorage.setItem("division",response.data.division);
             window.localStorage.setItem("name",response.data.name);
+
+            /*
+            * 22/07/2021 新需求: 默認選擇第一個選項
+            * 23/07/2021 修復已知bug: 必須等init()完, 才加載以下代碼, 否則projectNo將會默認執行上一個保留的projectNo
+            * */
+            // let searchType = [{name: '1'}]
+            this.search(this.editableTabsB[0]);
+
           }).catch(function (error) { // 请求失败处理
             console.log(error);
           });
@@ -619,9 +665,9 @@
             }
            ],
            * */
-          // let url2 =  "https://dev.hkdwss.com/api/v3" + "/users/" +  "2";  // testing, 测试可以先写死 1/2/3 这样子...
+          let url2 =  "https://dev.hkdwss.com/api/v3" + "/users/" +  "2";  // testing, 测试可以先写死 1/2/3 这样子...
           // let url2 =  "https://dev.hkdwss.com/api/v3" + "/users/" + event.data.user.id ;  // uat, 从event.data.user 对象中拿到id
-          let url2 =  "https://mobility.chunwo.com/api/v3" + "/users/" + event.data.user.id ;  // live
+          // let url2 =  "https://mobility.chunwo.com/api/v3" + "/users/" + event.data.user.id ;  // live
 
           console.log(" api/v3/user/{user_id} url->" + url2) ;
 

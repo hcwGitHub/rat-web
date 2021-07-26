@@ -137,7 +137,7 @@
           <el-button @click="submitEntry" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Save</el-button>
       </router-link>
 
-      <router-link v-if="this.type==='mobility'" :to="{name:'viewTwcDetail',query:{id:this.id,type:'mobility'}}">
+      <router-link v-if="this.type==='mobility'" :to="{name:'viewTwcDetail',query:{id:this.id,type:'mobility',identifier:identifier}}">
         <el-button @click="submitEntry" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Save</el-button>
       </router-link>
 
@@ -146,7 +146,7 @@
          <el-button @click="">Cancel</el-button>
       </router-link>
 
-      <router-link v-if="this.type==='mobility'" :to="{name:'viewTwcDetail',query:{id:this.id,type:'mobility'}}">
+      <router-link v-if="this.type==='mobility'" :to="{name:'viewTwcDetail',query:{id:this.id,type:'mobility',identifier:identifier}}">
         <el-button @click="">Cancel</el-button>
       </router-link>
 
@@ -163,8 +163,11 @@
         name: "editTwc",
         // 初始化页面
         mounted:function(){
+          // 21/07/2021 修復郵件鏈接
+          this.identifier = this.$route.query.identifier;
           this.id = this.$route.query.id
           this.type = this.$route.query.type;
+          console.log("identifier->"+ this.identifier);
           console.log("id->"+ this.id);
           console.log("type->"+this.type);
           this.rat_twc.id = this.id; // 修改rat_twc id
@@ -172,6 +175,8 @@
         },
         data(){
           return{
+            // 21/07/2021 修復郵件鏈接
+            identifier:'',
             id:1,
             type:'oc',
             newData:{},
@@ -180,6 +185,8 @@
             file:[], // files
             file_name:'', // upload files
             rat_twc:{
+              // 21/07/2021 修復郵件鏈接
+              identifier:'',
               id:16,
               type:'',
               approve:'',
@@ -320,6 +327,8 @@
           // console.log("rat_twc->" + this.rat_twc.remark);
 
           this.rat_twc.oc_mobility_type = this.type;
+          // 21/07/2021 修復郵件鏈接
+          this.rat_twc.identifier = this.identifier;
 
           this.$axios.post(url, this.rat_twc, {
               headers: {

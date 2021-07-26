@@ -107,7 +107,7 @@
             <router-link to="/techdSection/techDmenuSub">
               <el-menu-item index="1-2-1">Informative</el-menu-item>
             </router-link>
-            <el-menu-item index="1-2-2">Submission</el-menu-item>
+<!--            <el-menu-item index="1-2-2">Submission</el-menu-item>-->
           </el-submenu>
 
         </el-submenu>

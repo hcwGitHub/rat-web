@@ -9,7 +9,7 @@
       <div class="section-top-info2">
 
         <div class="section-top-info2-tag">Informative (TechD view)</div>
-        <div v-if="this.select_lable==='Shared Information'" class="section-top-tag">
+        <div v-if="this.select_lable==='General Information'" class="section-top-tag">
           <!--            <el-tag>Upload file</el-tag>-->
           <router-link to="/techdSection/addFile">
             <el-button>Upload</el-button>
@@ -20,7 +20,7 @@
     <!-- 主体部分 -->
     <div class="section-main">
       <el-tabs class="el-tabs-p" type="card" v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="Shared Information" name="first">
+        <el-tab-pane label="General Information" name="first">
           <!--内部选项卡-->
 
           <el-tabs v-model="activeName2" @tab-click="findFilesByType">
@@ -128,7 +128,7 @@
           <!--内部选项卡结束-->
         </el-tab-pane>
 
-        <el-tab-pane label="Detail Information of TWC / HIR with Proposed RAT Meetings" name="second">
+        <el-tab-pane label="Project Specific Information" name="second">
           <!--内部选项卡-->
           <!-- 通过条件过滤查詢-->
           <div class="searchByDivision" style="text-align: left;padding-bottom: 8px">
@@ -480,6 +480,29 @@
       if (login !== 1 && login !== '1'){
         this.$router.push("/");
       }
+      // 22/07/2021 新需求: 默認選擇第一個選項
+      let type = [{label:'Templates for "List of Consolidated Action Items" (HP Checklist)'}]
+      this.findFilesByType(type[0])
+      let searchType = [{name: '1'}]
+      this.search(searchType[0]);
+    },
+    // 22/01/2021 新需求: twc_list, hir_list值發生改變時, 把approve裡的字段轉化成大寫開頭
+    watch:{
+      // 22/07/2021 新需求: Status字段, 大寫開頭
+      twc_list:function () {
+        this.$nextTick(function () {
+          for (let i = 0; i < this.twc_list.length; i++) {
+            this.twc_list[i].approve = this.firstToUpper(this.twc_list[i].approve);
+          }
+        })
+      },
+      hir_list:function () {
+        this.$nextTick(function () {
+          for (let i = 0; i < this.hir_list.length; i++) {
+            this.hir_list[i].approve = this.firstToUpper(this.hir_list[i].approve);
+          }
+        })
+      }
     },
     data() {
       return {
@@ -490,12 +513,13 @@
         dialogVisible3: false, // del entry
         hir_id:'',
         twc_id:'',
-        select_lable: 'Shared Information', // 选项卡选择的模块
+        select_lable: 'General Information', // 选项卡选择的模块
         project_info: '', // project information
         user: '', // 用户信息
         activeName: 'first',
-        activeName2: 'second',
-        activeName3: 'thrid',
+        // 22/07/2021 新需求: 默認選擇第一個選項 ; 之前:second, thrid
+        activeName2: '1',
+        activeName3: '1',
         type_label: '', // file 使用
         project_name: '',
         checked: true,
@@ -609,6 +633,10 @@
       };
     },
     methods: {
+      // 22/07/2021 新需求: Status字段, 大寫開頭
+      firstToUpper(str) {
+        return str.trim().toLowerCase().replace(str[0], str[0].toUpperCase());
+      },
       handleClick(tab, event) {
         console.log(tab, event);
         console.log("select-lable: " + tab.label);

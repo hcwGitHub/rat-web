@@ -72,7 +72,7 @@
            <el-button  @click="submitEntry" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Save</el-button>
       </router-link>
 
-      <router-link v-if="this.type==='mobility'" :to="{name:'viewHirDetail',query:{id:this.id,type:'mobility',type_name:type_name}}">
+      <router-link v-if="this.type==='mobility'" :to="{name:'viewHirDetail',query:{id:this.id,type:'mobility',type_name:type_name,identifier:identifier}}">
         <el-button  @click="submitEntry" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Save</el-button>
       </router-link>
 
@@ -82,7 +82,7 @@
         <el-button @click="">Cancel</el-button>
       </router-link>
 
-      <router-link v-if="this.type==='mobility'" :to="{name:'viewHirDetail',query:{id:this.id,type:'mobility',type_name:type_name}}">
+      <router-link v-if="this.type==='mobility'" :to="{name:'viewHirDetail',query:{id:this.id,type:'mobility',type_name:type_name,identifier:identifier}}">
         <el-button @click="">Cancel</el-button>
       </router-link>
 
@@ -103,6 +103,9 @@
         this.type = this.$route.query.type;
         // hir 类型, 2 ： hir 3 hir temp (hir copy)
         this.type_name =  this.$route.query.type_name;
+        // 21/07/2021 修復郵件鏈接
+        this.identifier = this.$route.query.identifier;
+        console.log("identifier->" + this.identifier)
         console.log("id->"+ this.id);
         console.log("type->"+this.type);
         console.log("file_type->" + this.type_name );
@@ -115,6 +118,8 @@
             id:10,
             type:'oc',
             type_name:'',
+            // 21/07/2021 修復郵件鏈接
+            identifier:'',
             newData:{},
             fileList: [],  // file list
             fileData:'',
@@ -124,6 +129,8 @@
             rat_hir:{
               id:10,
               type:'',
+              // 21/07/2021 修復郵件鏈接
+              identifier:'',
               approve:'',
               divsion:'',
               project_no:'',
@@ -150,7 +157,7 @@
           console.log("request url->" + url);
           // request params
           let params = {
-            id:this.rat_hir.id
+            id:this.rat_hir.id,
           };
           // get
           this.$axios.get(url,
@@ -255,6 +262,8 @@
           }
 
           this.rat_hir.oc_mobility_type = this.type;
+          // 21/07/2021 修復郵件鏈接
+          this.rat_hir.identifier = this.identifier;
 
           this.$axios.post(url, this.rat_hir, {
               headers: {

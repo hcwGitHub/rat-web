@@ -30,7 +30,7 @@
           <el-button type="primary">Update/Upload</el-button>
         </router-link>
 
-        <router-link v-if="this.type==='mobility'" :to="{name:'editHir',query:{id:this.id,type:'mobility',type_name:type_name}}">
+        <router-link v-if="this.type==='mobility'" :to="{name:'editHir',query:{id:this.id,type:'mobility',type_name:type_name,identifier:identifier}}">
           <el-button type="primary">Update/Upload</el-button>
         </router-link>
 
@@ -54,8 +54,8 @@
           <!-- pending 或者 rejected 可以填写备注-->
           <div v-if="radio==='pending' || radio==='rejected'" style="width: 270px; margin: 0 auto">
             <br>
-            <div v-if="radio==='pending'" style="text-align: left;padding-left: 20%"> Remarks </div>
-            <div v-if="radio==='rejected'" style="text-align: left;padding-left: 20%"> Reason Of Rejection </div>
+            <div v-if="radio==='pending'" style="text-align: left;"> Remarks </div>
+            <div v-if="radio==='rejected'" style="text-align: left;"> Reason Of Rejection </div>
 <!--            <div style="text-align: left;padding-left: 60px"> Remarks </div>-->
             <br>
 <!--            <span style="display:block;text-align: left">Remarks</span>-->
@@ -288,11 +288,13 @@
     // 初始化页面
     mounted: function () {
 
-
       this.id = this.$route.query.id
       this.type = this.$route.query.type;
       // hir 类型, 2 ： hir 3 hir temp (hir copy)
       this.type_name =  this.$route.query.type_name;
+      // 21/07/2021 修復郵件鏈接
+      this.identifier = this.$route.query.identifier;
+      console.log("identifier->" + this.identifier)
       console.log("id->" + this.id);
       console.log("type->" + this.type);
       console.log("type_name->"+this.type_name);
@@ -303,11 +305,12 @@
           this.$router.push("/");
         }
       }
-
       this.findHirByid();
     },
     data() {
       return {
+        // 21/07/2021 修復郵件鏈接
+        identifier:'',
         type_name:'',
         hir_remark:'',
         input: '',
