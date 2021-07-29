@@ -251,7 +251,7 @@
 
           if (this.type === 'oc'){
             // 執行者
-            this.rat_hir.creator = window.localStorage.getItem("oc_user_email");
+            this.rat_hir.creator = window.localStorage.getItem("oc_user_name");
             // send email
             this.rat_hir.send_email = window.localStorage.getItem("oc_user_email");
           }else {
@@ -272,7 +272,6 @@
             }
           ).then(response => {
             if (response.data.result === "SUCCESS") {
-
               console.log("SUCCESS!!")
               this.$message({
                 message: 'Successful operation',

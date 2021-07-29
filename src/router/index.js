@@ -106,6 +106,11 @@ export const constantRouter = [
         name: 'changePassword',
         component: () => import('@/views/views/changePassword')
       },
+      {
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/views/views/profile')
+      },
     ]
   },
 
@@ -176,6 +181,14 @@ export const constantRouter = [
     path: '/changePassword',
     name: 'changePassword',
     component: () => import('@/views/views/changePassword')
+  },
+  /**
+   * 26/07/2021 新需求: 增加profile頁面, 顯示個人資料
+   */
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/views/profile')
   },
 
   {

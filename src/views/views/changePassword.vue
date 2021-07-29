@@ -15,8 +15,8 @@
         <el-input v-model="confirmPwd" show-password></el-input>
       </div>
       <div>
-        <el-button icon="el-icon-check" type="primary" @click="changePassword">save</el-button>
-        <el-button plain @click="$router.go(-1)">cancel</el-button>
+        <el-button icon="el-icon-check" type="primary" @click="changePassword">Save</el-button>
+        <el-button plain @click="$router.go(-1)">Cancel</el-button>
         <!--<router-link to="/home">
           <el-button plain>cancel</el-button>
         </router-link>-->

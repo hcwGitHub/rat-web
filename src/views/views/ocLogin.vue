@@ -91,8 +91,14 @@
 
               // 提示
               this.$message.success("login success");
-              // 重定向 oc UI
-              this.$router.push('/home');
+              // 26/07/2021 新需求: 登錄判斷, 該用戶是否完善個人信息
+              this.$axios.get(requestPath() + "findOcUser?id=" + response.data.id)
+                .then(res => {
+                  console.log("name->" + res.data.ocUser.name)
+                  window.localStorage.setItem("oc_user_name", res.data.ocUser.name)
+                  // 重定向 oc UI
+                  this.$router.push('/home');
+                })
 
             } else {
               this.$message.error(response.data.msg);

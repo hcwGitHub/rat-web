@@ -31,7 +31,7 @@
             <td class="td1"><span>Creator</span></td>
             <td class="td2">
               {{fileObj.creator}}
-            </td>Creator
+            </td>
           </tr>
           <tr>
             <td class="td1"><span>Display</span></td>
@@ -66,7 +66,7 @@
       </div>
       <div class="button_commit" style="text-align: left;padding-left: 45px;padding-top: 10px;">
 <!--        <form enctype="multipart/form-data" :action="submitUpload" method="POST">-->
-          <el-button @click="submitUpload" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Upload</el-button>
+          <el-button @click="submitUpload" style="background-color: #1c68a4;color: white" v-loading.fullscreen.lock="fullscreenLoading"><i class="el-icon-check" style="padding-right:5px; "></i>Upload</el-button>
           <router-link to="/techdSection">
           <el-button>Cancel</el-button>
         </router-link>
@@ -95,7 +95,7 @@
          user_email -- mobility
          oc_user_email -- userName/email
          * */
-        let user_name = window.localStorage.getItem("oc_user_email");
+        let user_name = window.localStorage.getItem("oc_user_name");
         this.fileObj.creator = user_name;
       },
         data(){
@@ -140,6 +140,9 @@
               }
 
             ],
+
+            // 27/07/2021 新需求: 上傳文件的時候, 增加loading加載, 避免重複上傳
+            fullscreenLoading: false,
           }
         },
         methods:{
@@ -169,6 +172,7 @@
             console.log("url->" + url);
             console.log("upData->"+upData)
             let _this = this;
+            this.fullscreenLoading = true;
             this.$axios.post(url, upData, {
                       headers: {
                         // 'signature': sign
@@ -192,7 +196,7 @@
                       }
                       this.fileObj.file_name = this.file_name;
                       // 設置創建用戶信息
-                      this.fileObj.creator = window.localStorage.getItem("user_name");
+                      this.fileObj.creator = window.localStorage.getItem("oc_user_name");
                       // 接着保存文件相关信息
                       let url2 = requestPath() + "addFile";
                       console.log("url2->"+url2)
@@ -203,6 +207,7 @@
                         }
                       ).then(response => {
                         if (response.data.result === "SUCCESS") {
+                          this.fullscreenLoading = false;
                           console.log("add file api success!")
                           // this.getBannerListMethod();
                           this.$message({

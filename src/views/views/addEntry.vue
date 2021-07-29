@@ -178,7 +178,7 @@
             </el-upload>
           </div>
           <div class="button_commit" style="text-align: left;padding-top: 10px;">
-            <el-button @click="submitEntry" style="background-color: #1c68a4;color: white"><i class="el-icon-check" style="padding-right:5px; "></i>Create</el-button>
+            <el-button @click="submitEntry" style="background-color: #1c68a4;color: white" v-loading.fullscreen.lock="fullscreenLoading"><i class="el-icon-check" style="padding-right:5px; "></i>Create</el-button>
             <router-link :to="{name:'mobility_techDmenuSub',query:{identifier:identifier}}">
               <el-button>Cancel</el-button>
             </router-link>
@@ -323,6 +323,9 @@
             }
             ],
 
+            // 27/07/2021 新需求: 上傳文件的時候, 增加loading加載, 避免重複上傳
+            fullscreenLoading:false,
+
 
           }
         },
@@ -351,6 +354,7 @@
           console.log("url->" + url);
           console.log("upData->"+upData)
           let _this = this;
+          this.fullscreenLoading = true;
           this.$axios.post(url, upData, {
               headers: {
                 // 'signature': sign
@@ -385,7 +389,7 @@
                     }
                   ).then(response => {
                     if (response.data.result === "SUCCESS") {
-
+                      this.fullscreenLoading = false;
                       console.log("SUCCESS!!")
                       this.$message({
                         message: 'Created Twc entry successfully',
@@ -418,6 +422,7 @@
                   }
                 ).then(response => {
                   if (response.data.result === "SUCCESS") {
+                    this.fullscreenLoading = false;
                     console.log("SUCCESS!!")
                     this.$message({
                       message: 'Created Hir entry successfully',
@@ -450,6 +455,7 @@
                   }
                 ).then(response => {
                   if (response.data.result === "SUCCESS") {
+                    this.fullscreenLoading = false;
                     console.log("SUCCESS!!")
                     this.$message({
                       message: 'Created Hir entry successfully',

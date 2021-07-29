@@ -91,7 +91,7 @@
       <!--  Basic Information -->
 
       <div class="main-content">
-        <el-card shadow="always">
+        <el-card shadow="always" v-loading="loading">
           <div class="main-info">
             <span style="font-family: 'Arial', sans-serif;
       font-weight: 700;font-size: 14px">Basic Information</span>
@@ -198,7 +198,7 @@
       <!-- Attachments -->
 
       <div class="attachments">
-        <el-card shadow="always">
+        <el-card shadow="always" v-loading="loading">
           <div class="attachment-info"><span style="font-family: 'Arial', sans-serif;
       font-weight: 700;font-size: 14px">Attachments</span>
           </div>
@@ -266,7 +266,7 @@
 
       <!--Log -->
       <div class="attachments">
-        <el-card shadow="always">
+        <el-card shadow="always" v-loading="loading">
           <div class="attachment-info"><span style="font-family: 'Arial', sans-serif;
       font-weight: 700;font-size: 14px">Log</span>
           </div>
@@ -325,7 +325,11 @@
         }
       }
 
-      this.findTwcByid();
+      let _this = this;
+      window.setTimeout(function () {
+        _this.findTwcByid();
+      }, 100)
+
     },
     data() {
       return {
@@ -388,6 +392,8 @@
         radio: '', // 绑定rat_twc
         files: [], // files
         logs: [],// logs
+
+        loading: true,
       }
     },
     methods: {
@@ -421,6 +427,7 @@
             this.files = response.data.files;
             this.logs = response.data.logs;
             console.log("rat_twc->" + this.rat_twc);
+            this.loading = false;
             this.radio = this.rat_twc.approve;
 
           } else {
@@ -488,7 +495,7 @@
            oc_user_email -- oc userName/email
          * */
         if(this.type==='oc'){
-          data.creator = window.localStorage.getItem("oc_user_email");
+          data.creator = window.localStorage.getItem("oc_user_name");
           data.send_email =  window.localStorage.getItem("oc_user_email");
         }else {
           data.creator = window.localStorage.getItem("user_name");

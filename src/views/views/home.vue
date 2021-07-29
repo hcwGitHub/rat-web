@@ -2,38 +2,40 @@
   <!--rat home 主面板-->
   <div class="home">
     <div class="header-banner">
-      <el-popover
-        placement="bottom"
-        width="400"
-        trigger="click">
-        <div class="content">
-          <span style="font-size: 16px;">Switch to</span>
-          <div style="padding-top:12px">
-            <el-button style="width: 62px">M</el-button>
-            <span style="display: inline-block;margin-left: 10px;">Mobility</span>
-          </div>
-          <div style="padding-top:12px">
-            <el-button>OC</el-button>
-            <span style="display: inline-block;margin-left: 10px;">CW OC</span>
-          </div>
-          <div style="padding-top:12px">
-            <el-button>DC</el-button>
-            <span style="display: inline-block;margin-left: 10px;">CW DC </span>
-          </div>
+      <div>
+        <el-popover
+          placement="bottom"
+          width="400"
+          trigger="click">
+          <div class="content">
+            <span style="font-size: 16px;">Switch to</span>
+            <div style="padding-top:12px">
+              <el-button style="width: 62px">M</el-button>
+              <span style="display: inline-block;margin-left: 10px;">Mobility</span>
+            </div>
+            <div style="padding-top:12px">
+              <el-button>OC</el-button>
+              <span style="display: inline-block;margin-left: 10px;">CW OC</span>
+            </div>
+            <div style="padding-top:12px">
+              <el-button>DC</el-button>
+              <span style="display: inline-block;margin-left: 10px;">CW DC </span>
+            </div>
 
 
-        </div>
-        <el-button style="border: 0" slot="reference"><i style="font-size:32px;color: #ababab;width:43px; "
-                                                         class="el-icon-s-grid"></i></el-button>
-      </el-popover>
+          </div>
+          <el-button style="border: 0" slot="reference"><i style="font-size:32px;color: #ababab;width:43px; "
+                                                           class="el-icon-s-grid"></i></el-button>
+        </el-popover>
 
-      <!--      <i style="font-size:32px;color: #ababab;width:43px; " class="el-icon-s-grid"></i>-->
-      <span class="header-info">CW OC</span>
-      <span style="display: inline-block; text-align:center; display: inline-block;width:47%;margin-left: 13%;">
+        <!--      <i style="font-size:32px;color: #ababab;width:43px; " class="el-icon-s-grid"></i>-->
+        <span class="header-info">CW OC</span>
+      </div>
+      <span>
        <img style="height: 25px" src="../../../static/img/logo.png"/>
       </span>
 
-      <span style="display: inline-block;width: auto; text-align: right; float: right;padding-right: 50px;">
+      <span style="display: flex; align-items: center;">
         <el-input
           placeholder=""
           suffix-icon="el-icon-search"
@@ -76,8 +78,12 @@
          width="200"
          trigger="click">
           <el-button style="display:none;"></el-button>
+         <!-- 26/07/2021 新需求: 增加profile頁面 -->
+          <router-link to="/techdSection/profile">
+            <el-button plain>Profile</el-button>
+          </router-link>
           <router-link to="/techdSection/changePassword">
-            <el-button plain>Change Password</el-button>
+            <el-button plain style="margin-top: 10px;">Change Password</el-button>
           </router-link>
           <el-button plain @click="loginOut"style="margin-top: 10px;">Log Out</el-button>
        <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>
@@ -151,6 +157,18 @@
       //   _this.init(event);
       // });
     },
+
+    created() {
+      // 26/07/2021 新需求: 增加profile頁面, oc用戶可查看和修改個人資料
+      let oc_user_name = window.localStorage.getItem("oc_user_name");
+      console.log("oc_user_name->" + oc_user_name)
+      if (oc_user_name === '' || oc_user_name === "null" || oc_user_name === undefined || oc_user_name === null || oc_user_name === " ") {
+        this.$alert('Please complete your profile.', 'Reminder', {
+          confirmButtonText: 'Confirm',
+        });
+        this.$router.push("/techdSection/profile");
+      }
+    },
     data() {
       return {
         // oc account and pwd
@@ -167,6 +185,8 @@
         console.log("log out");
         // 删除cookie 信息
         delCookie("isLogin");
+        // 26/07/2021 退出是, 刪除瀏覽器存儲的oc_user_name
+        window.localStorage.removeItem("oc_user_name");
         // 跳转到login UI
         this.$router.push("/");
       },
@@ -246,12 +266,13 @@
   }
 
   .header-banner {
-    width: calc(100% - 5px);
-    text-align: left;
-    /*padding-left: 15px;*/
-    /*padding-top: 5px;*/
+    padding-right: 25px;
     padding-bottom: 5px;
     border-bottom-style: groove;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .el-input {

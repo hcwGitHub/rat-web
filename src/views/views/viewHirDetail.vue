@@ -93,7 +93,7 @@
     <div class="content-main-info">
       <!--  Basic Information -->
       <div class="main-content">
-        <el-card shadow="always">
+        <el-card shadow="always" v-loading="loading">
           <div class="main-info">
           <span style="font-family: 'Arial', sans-serif;
     font-weight: 700;font-size: 14px">Basic Information</span>
@@ -141,7 +141,7 @@
 
       <!-- Attachments -->
       <div class="attachments">
-        <el-card shadow="always">
+        <el-card shadow="always" v-loading="loading">
           <div class="attachment-info"><span style="font-family: 'Arial', sans-serif;
     font-weight: 700;font-size: 14px">Attachments</span>
           </div>
@@ -207,7 +207,7 @@
 
       <!--Log -->
       <div class="attachments">
-        <el-card shadow="always">
+        <el-card shadow="always" v-loading="loading">
           <div class="attachment-info"><span style="font-family: 'Arial', sans-serif;
     font-weight: 700;font-size: 14px">Log</span>
           </div>
@@ -305,7 +305,10 @@
           this.$router.push("/");
         }
       }
-      this.findHirByid();
+      let _this = this;
+      window.setTimeout(function () {
+        _this.findHirByid();
+      }, 100)
     },
     data() {
       return {
@@ -363,6 +366,7 @@
         files: [], // files
         logs: [],// logs
 
+        loading: true,
       }
     },
 
@@ -402,7 +406,8 @@
             this.files = response.data.files;
             this.logs = response.data.logs;
             console.log("rat_hir->" + this.rat_hir);
-            this.radio = this.rat_twc.approve;
+            this.loading = false;
+            this.radio = this.rat_hir.approve;
 
           } else {
             this.$message.error(response.data.msg);
@@ -479,7 +484,7 @@
          oc_user_email -- oc userName/email
          * */
         if(this.type==='oc'){
-         data.creator = window.localStorage.getItem("oc_user_email");
+         data.creator = window.localStorage.getItem("oc_user_name");
          data.send_email =  window.localStorage.getItem("oc_user_email");
         }else {
           data.creator = window.localStorage.getItem("user_name");

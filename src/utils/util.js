@@ -31,7 +31,8 @@ let oldApiPath = 'http://dev.hkdwss.com/api/v3';  // dev
 
 //获取请求路径
 function requestPath() {
-    return 'http://' + ipPath + '/api/';
+    return 'http://' + ipPath + '/api/';  // 本地
+    // return 'https://' + ipPath + '/api/';  // live
     // return ipPath + '/api/';
 }
 

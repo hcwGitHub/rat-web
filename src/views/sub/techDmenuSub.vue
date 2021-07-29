@@ -968,7 +968,7 @@
           id: this.hir_id,
           approve: this.radio2,
           remark: this.hir_remark, // remark
-          creator: window.localStorage.getItem("oc_user_email"), // creator
+          creator: window.localStorage.getItem("oc_user_name"), // creator
           send_email : window.localStorage.getItem("oc_user_email")
         }
         // 打印一下remark info
@@ -1009,7 +1009,7 @@
           id: this.twc_id,
           approve: this.radio,
           remark: this.twc_remark, // twc approve 修改 remark
-          creator: window.localStorage.getItem("oc_user_email"),
+          creator: window.localStorage.getItem("oc_user_name"),
           send_email : window.localStorage.getItem("oc_user_email")
         }
         // 打印一下remark info

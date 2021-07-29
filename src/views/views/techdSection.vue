@@ -2,34 +2,36 @@
   <!-- TechD Section UI-->
   <div class="techDMenu">
     <div class="header-banner">
-      <el-popover
-        placement="bottom"
-        width="400"
-        trigger="click">
-        <div class="content">
-          <span style="font-size: 16px;">Switch to</span>
-          <div style="padding-top:12px">
-            <el-button style="width: 62px">M</el-button> <span style="display: inline-block;margin-left: 10px;">Mobility</span>
+      <div>
+        <el-popover
+          placement="bottom"
+          width="400"
+          trigger="click">
+          <div class="content">
+            <span style="font-size: 16px;">Switch to</span>
+            <div style="padding-top:12px">
+              <el-button style="width: 62px">M</el-button> <span style="display: inline-block;margin-left: 10px;">Mobility</span>
+            </div>
+            <div style="padding-top:12px">
+              <el-button>OC</el-button> <span style="display: inline-block;margin-left: 10px;">CW OC</span>
+            </div>
+           <div style="padding-top:12px">
+             <el-button>DC</el-button> <span style="display: inline-block;margin-left: 10px;">CW DC </span>
+           </div>
+
+
           </div>
-          <div style="padding-top:12px">
-            <el-button>OC</el-button> <span style="display: inline-block;margin-left: 10px;">CW OC</span>
-          </div>
-         <div style="padding-top:12px">
-           <el-button>DC</el-button> <span style="display: inline-block;margin-left: 10px;">CW DC </span>
-         </div>
+          <el-button style="border: 0" slot="reference"><i style="font-size:32px;color: #ababab;width:43px; " class="el-icon-s-grid"></i></el-button>
+        </el-popover>
 
-
-        </div>
-        <el-button style="border: 0" slot="reference"><i style="font-size:32px;color: #ababab;width:43px; " class="el-icon-s-grid"></i></el-button>
-      </el-popover>
-
-<!--      <i style="font-size:32px;color: #ababab;width:43px; " class="el-icon-s-grid"></i>-->
-      <span class="header-info">CW Portal</span>
-      <span style="display: inline-block; text-align:center; display: inline-block;width:45%;margin-left: 13%;">
+  <!--      <i style="font-size:32px;color: #ababab;width:43px; " class="el-icon-s-grid"></i>-->
+        <span class="header-info">CW Portal</span>
+      </div>
+      <span>
        <img style="height: 25px;" src="../../../static/img/logo.png"/>
       </span>
 
-      <span style="display: inline-block;width: auto; text-align: right; float: right;padding-right: 50px;">
+      <span style="display: flex; align-items: center;">
         <el-input
           placeholder=""
           suffix-icon="el-icon-search"
@@ -69,8 +71,11 @@
           width="200"
           trigger="click">
           <el-button style="display:none;"></el-button>
+          <router-link to="/techdSection/profile">
+            <el-button plain>Profile</el-button>
+          </router-link>
           <router-link to="/techdSection/changePassword">
-            <el-button plain>Change Password</el-button>
+            <el-button plain style="margin-top: 10px;">Change Password</el-button>
           </router-link>
           <el-button plain @click="loginOut" style="margin-top: 10px;">Log Out</el-button>
        <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>
@@ -86,7 +91,7 @@
       <router-link to="/home">
         <div class="menu-top-info">
         <span>
-          <el-button><span> <- </span></el-button>
+          <el-button><span class="el-icon-arrow-left"></span></el-button>
         </span>
           <span class="text-span">Back to Home</span>
         </div>
@@ -154,6 +159,8 @@
         console.log("log out");
         // 删除cookie 信息
         delCookie("isLogin");
+        // 26/07/2021 退出是, 刪除瀏覽器存儲的oc_user_name
+        window.localStorage.removeItem("oc_user_name");
         // 跳转到login UI
         this.$router.push("/");
       },
@@ -202,13 +209,13 @@
 
 <style scoped>
   .header-banner {
-    width: calc(100% - 5px);
-    text-align: left;
-    /*padding-left: 15px;*/
-    /*padding-top: 79px;*/
+    padding-right: 25px;
     padding-bottom: 5px;
-    /*padding-left: 110px;*/
     border-bottom-style: groove;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .el-input {

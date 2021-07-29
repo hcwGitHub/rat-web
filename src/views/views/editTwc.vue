@@ -307,7 +307,7 @@
 
           if (this.type === 'oc'){
             // 執行者
-            this.rat_twc.creator = window.localStorage.getItem("oc_user_email");
+            this.rat_twc.creator = window.localStorage.getItem("oc_user_name");
             // send email
             this.rat_twc.send_email = window.localStorage.getItem("oc_user_email");
           }else {
