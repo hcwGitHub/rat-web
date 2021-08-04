@@ -102,9 +102,9 @@
         this.id = this.$route.query.id
         this.type = this.$route.query.type;
         // hir 类型, 2 ： hir 3 hir temp (hir copy)
-        this.type_name =  this.$route.query.type_name;
+        this.type_name = this.$route.query.type_name;
         // 21/07/2021 修復郵件鏈接
-        this.identifier = this.$route.query.identifier;
+        this.identifier = window.localStorage.getItem("identifier");
         console.log("identifier->" + this.identifier)
         console.log("id->"+ this.id);
         console.log("type->"+this.type);

@@ -110,7 +110,15 @@ export const constantRouter = [
         path: 'profile',
         name: 'profile',
         component: () => import('@/views/views/profile')
-      },
+      },{
+        path: 'oc_addEntry',
+        name: 'oc_addEntry',
+        component: () => import('@/views/views/oc_addEntry')
+      },/*{
+        path: 'testPage',
+        name: 'testPage',
+        component: () => import('@/views/views/testPage')
+      }*/
     ]
   },
 
@@ -189,6 +197,14 @@ export const constantRouter = [
     path: '/profile',
     name: 'profile',
     component: () => import('@/views/views/profile')
+  },
+  /**
+   * 29/07/2021 新需求: oc的Project specific information選項, 也要有upload功能
+   */
+  {
+    path: '/oc_addEntry',
+    name: 'oc_addEntry',
+    component: () => import('@/views/views/oc_addEntry')
   },
 
   {

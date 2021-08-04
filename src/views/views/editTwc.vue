@@ -164,7 +164,7 @@
         // 初始化页面
         mounted:function(){
           // 21/07/2021 修復郵件鏈接
-          this.identifier = this.$route.query.identifier;
+          this.identifier = window.localStorage.getItem("identifier");
           this.id = this.$route.query.id
           this.type = this.$route.query.type;
           console.log("identifier->"+ this.identifier);

@@ -11,6 +11,7 @@ export {
     getDiffYear,//获取从2019/11/1到今天的 “年份列表”
     getDate,
     getGuid,
+    textAvatar
 }
 // 新系统------>
 let ipPath = 'localhost:8080';       //本地
@@ -274,4 +275,16 @@ function S4() {
 }
 function getGuid() {
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+
+// 03/08/2021 增加為文字頭像
+function textAvatar() {
+  var oc_user_name = window.localStorage.getItem("oc_user_name");
+  var arr = oc_user_name.split(" ");
+  var fristCode = '';
+  for (var i in arr) {
+    fristCode += arr[i].substr(0, 1);
+  }
+  oc_user_name = fristCode.toLocaleUpperCase();
+  return oc_user_name;
 }

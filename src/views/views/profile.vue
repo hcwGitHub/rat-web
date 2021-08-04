@@ -1,32 +1,48 @@
 <template>
   <div class="profile">
-    <h3>Profile</h3>
-    <form class="form">
-      <div class="form_input">
-        <span>First name<i class="red">*</i></span>
-        <el-input v-model="firstName"></el-input>
-      </div>
-      <div class="form_input">
-        <span>Last name<i class="red">*</i></span>
-        <el-input v-model="lastName"></el-input>
-      </div>
-      <div class="form_input">
-        <span>Email<i class="red">*</i></span>
-        <el-input v-model="email" :disabled="true"></el-input>
-      </div>
-      <div>
-        <el-button icon="el-icon-check" type="primary" @click="profile">Save</el-button>
-<!--        <el-button plain @click="$router.go(-1)">cancel</el-button>-->
+    <el-form :model="formValue" ref="formValue" :label-position="labelPosition" label-width="110px"
+             class="demo-ruleForm">
+      <h3 style="text-align: left">Profile</h3>
+      <el-form-item
+        label="First name"
+        prop="firstName"
+        :rules="[
+          { required: true, message: 'First name can not be empty'},
+        ]"
+      >
+        <el-input type="text" v-model="formValue.firstName" clearable autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item
+        label="Last name"
+        prop="lastName"
+        :rules="[
+          { required: true, message: 'Last name can not be empty'},
+        ]"
+      >
+        <el-input type="text" v-model="formValue.lastName" @keydown.enter.native="submitForm('formValue')" clearable autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item
+        label="Email"
+        prop="email"
+        :rules="[
+          { required: true, message: 'Email can not be empty'},
+        ]"
+      >
+        <el-input type="text" :disabled="true" v-model="formValue.email" autocomplete="off"></el-input>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button icon="el-icon-check" type="primary" @click="submitForm('formValue')">Save</el-button>
         <router-link to="/home">
           <el-button plain>Cancel</el-button>
         </router-link>
-      </div>
-    </form>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
-  import {requestPath} from '@/utils/util'
+  import {requestPath} from "../../utils/util";
 
   export default {
     name: "profile",
@@ -38,51 +54,53 @@
       let params = {
         id: id
       }
-      this.$axios.get(url, {
-        params:params
-      })
-      .then(res => {
-        this.firstName = res.data.ocUser.firstName;
-        this.lastName = res.data.ocUser.lastName;
-        this.email = res.data.ocUser.account;
-        console.log("firstName->" +this.firstName);
-        console.log("lastName->" +this.lastName);
-        console.log("email->" +this.email);
-      })
-      .catch(err => {
+      this.$axios.get(url, {params: params})
+        .then(res => {
+          this.formValue.firstName = res.data.ocUser.firstName;
+          this.formValue.lastName = res.data.ocUser.lastName;
+          this.formValue.email = res.data.ocUser.account;
+          console.log("firstName->" +this.formValue.firstName);
+          console.log("lastName->" +this.formValue.lastName);
+          console.log("email->" +this.formValue.email);
+        })
 
-      })
     },
-
     data() {
       return {
-        firstName: '',
-        lastName: '',
-        email: ''
+        labelPosition: 'left',
+        formValue: {
+          firstName: '',
+          lastName: '',
+          email: ''
+        }
       }
     },
     methods: {
-      profile() {
-        let url = requestPath() + "updateOcUser";
-        console.log("request url->" + url);
-        // 获取当前登录user的id值
-        let id = window.localStorage.getItem("id");
-        let params = {
-          id: id,
-          firstName: this.firstName,
-          lastName: this.lastName,
-        }
-        this.$axios.post(url, params)
-          .then(response => {
-            if (response.data.result === "SUCCESS") {
-              this.$message.success("Update information success");
-              window.localStorage.setItem("oc_user_name", response.data.name)
-              console.log("oc_user_name->" + response.data.name);
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let url = requestPath() + "updateOcUser";
+            console.log("request url->" + url);
+            // 獲取當前登錄User的id
+            let id = window.localStorage.getItem("id");
+            let params = {
+              id: id,
+              firstName: this.formValue.firstName,
+              lastName: this.formValue.lastName
             }
-          })
-          .catch(function (error) { // 请求失败处理
-            this.$message.error(error);
-          });
+            this.$axios.post(url, params)
+              .then(res => {
+                if (res.data.result === "SUCCESS") {
+                  this.$message.success("Update information success");
+                  window.localStorage.setItem("oc_user_name", res.data.name);
+                  console.log("oc_user_name->" + res.data.name);
+                }
+              })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
     }
   }
@@ -90,30 +108,20 @@
 
 <style scoped>
   .profile {
-    text-align: left;
+    width: 350px;
     padding: 30px;
   }
 
-  .form {
-    width: 350px;
+  /deep/ .el-form-item:last-child .el-form-item__content {
+    text-align: left !important;
+    margin-left: 0 !important;
   }
 
-  .form .form_input {
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .el-button {
+    margin-right: 13px;
   }
 
   .el-button--primary {
     background-color: #1c68a4;
-  }
-
-  .red {
-    color: red;
-  }
-
-  .el-input {
-    width: 200px !important;
   }
 </style>

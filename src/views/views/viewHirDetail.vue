@@ -373,7 +373,8 @@
     methods: {
       // 下载文件
       downloadFile(value,file_name){
-        let fileName = file_name;
+        // 03/08/2021 修復文件名包含特殊符號問題: encodeURIComponent() 函数可把字符串作为 URI 组件进行编码
+        let fileName = encodeURIComponent(file_name);
         console.log("file_name->"+fileName);
         let url = requestPath() + "download?attribute=0&fileName="+fileName;
         console.log("url->"+url);
@@ -476,7 +477,8 @@
           approve: this.radio,
           remark:this.hir_remark,
           creator: '', // creator 未知
-          send_email : ''
+          send_email : '',
+          identifier: window.localStorage.getItem("identifier")
         }
         /**
          *user_name   -- mobility

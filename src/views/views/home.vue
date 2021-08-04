@@ -86,7 +86,8 @@
             <el-button plain style="margin-top: 10px;">Change Password</el-button>
           </router-link>
           <el-button plain @click="loginOut"style="margin-top: 10px;">Log Out</el-button>
-       <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>
+<!--       <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>-->
+         <el-avatar size="medium" slot="reference" style="cursor: pointer; background-color: #cc6776; user-select: none;">{{oc_user_name === 'N' ? 'PC' : oc_user_name}}</el-avatar>
        </el-popover>
 
       </span>
@@ -135,7 +136,7 @@
 </template>
 
 <script>
-  import {requestPath, setCookie, getCom, getCookie, mytrim, delCookie} from '@/utils/util'
+  import {requestPath, setCookie, getCom, getCookie, mytrim, delCookie, textAvatar} from '@/utils/util'
   import {getSign} from '@/utils/md5'
 
   export default {
@@ -161,6 +162,7 @@
     created() {
       // 26/07/2021 新需求: 增加profile頁面, oc用戶可查看和修改個人資料
       let oc_user_name = window.localStorage.getItem("oc_user_name");
+      this.oc_user_name = textAvatar();
       console.log("oc_user_name->" + oc_user_name)
       if (oc_user_name === '' || oc_user_name === "null" || oc_user_name === undefined || oc_user_name === null || oc_user_name === " ") {
         this.$alert('Please complete your profile.', 'Reminder', {
@@ -177,6 +179,7 @@
         search: '',
         dialogVisible:false,
         flag:0,
+        oc_user_name: ''
       }
     },
     methods: {

@@ -78,7 +78,8 @@
             <el-button plain style="margin-top: 10px;">Change Password</el-button>
           </router-link>
           <el-button plain @click="loginOut" style="margin-top: 10px;">Log Out</el-button>
-       <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>
+<!--       <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>-->
+          <el-avatar size="medium" slot="reference" style="cursor: pointer; background-color: #cc6776; user-select: none;">{{oc_user_name === 'N' ? 'PC' : oc_user_name}}</el-avatar>
        </el-popover>
 
       </span>
@@ -133,7 +134,7 @@
 </template>
 
 <script>
-  import {requestPath,setCookie, getCom, getCookie, mytrim, delCookie} from '@/utils/util'
+  import {requestPath,setCookie, getCom, getCookie, mytrim, delCookie, textAvatar} from '@/utils/util'
   import {getSign} from '@/utils/md5'
   export default {
     name: "techdSection",
@@ -147,10 +148,15 @@
     //     _this.init(event);
     //   });
     // },
+    created() {
+      // 文字頭像
+      this.oc_user_name = textAvatar();
+    },
     data() {
       return {
         search: '',
         filterText: '',
+        oc_user_name:''
       };
     },
     methods: {

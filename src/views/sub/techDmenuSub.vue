@@ -15,6 +15,13 @@
             <el-button>Upload</el-button>
           </router-link>
         </div>
+        <!-- 29/07/2021 新需求: oc用戶也可以在該選項, upload -->
+        <div v-if="this.select_lable==='Project Specific Information'" class="section-top-tag">
+          <!--            <el-tag>Upload file</el-tag>-->
+          <router-link to="/techdSection/oc_addEntry">
+            <el-button>Upload</el-button>
+          </router-link>
+        </div>
       </div>
     </div>
     <!-- 主体部分 -->
@@ -504,6 +511,18 @@
         })
       }
     },
+    // 沒有oc_user_name的時候, 阻止點擊informative選項
+    created() {
+      // 26/07/2021 新需求: 增加profile頁面, oc用戶可查看和修改個人資料
+      let oc_user_name = window.localStorage.getItem("oc_user_name");
+      console.log("oc_user_name->" + oc_user_name)
+      if (oc_user_name === '' || oc_user_name === "null" || oc_user_name === undefined || oc_user_name === null || oc_user_name === " ") {
+        this.$alert('Please complete your profile.', 'Reminder', {
+          confirmButtonText: 'Confirm',
+        });
+        this.$router.push("/techdSection/profile");
+      }
+    },
     data() {
       return {
         hir_remark:'', // hir approve 按钮备注.
@@ -766,7 +785,8 @@
 
       // 下载文件
       downloadFile(value, file_name) {
-        let fileName = file_name;
+        // 03/08/2021 修復文件名包含特殊符號問題: encodeURIComponent() 函數可把字符串作為URI組件進行編碼
+        let fileName = encodeURIComponent(file_name);
         console.log("file_name->" + fileName);
         let url = requestPath() + "download?attribute=1&fileName=" + fileName;
         console.log("url->" + url);
@@ -969,7 +989,8 @@
           approve: this.radio2,
           remark: this.hir_remark, // remark
           creator: window.localStorage.getItem("oc_user_name"), // creator
-          send_email : window.localStorage.getItem("oc_user_email")
+          send_email : window.localStorage.getItem("oc_user_email"),
+          identifier: window.localStorage.getItem("identifier")
         }
         // 打印一下remark info
         this.$axios.post(url, data, {
@@ -1010,7 +1031,8 @@
           approve: this.radio,
           remark: this.twc_remark, // twc approve 修改 remark
           creator: window.localStorage.getItem("oc_user_name"),
-          send_email : window.localStorage.getItem("oc_user_email")
+          send_email : window.localStorage.getItem("oc_user_email"),
+          identifier: window.localStorage.getItem("identifier")
         }
         // 打印一下remark info
         this.$axios.post(url, data, {

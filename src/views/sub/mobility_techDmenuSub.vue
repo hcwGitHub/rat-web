@@ -429,6 +429,7 @@
 
         // 21/07/2021 修復郵件鏈接
         this.identifier = this.$route.query.identifier;
+        window.localStorage.setItem("identifier",this.identifier);
         console.log("identifier->" + this.identifier);
 
         /**
@@ -1296,7 +1297,8 @@
         },
         // 下载文件
         downloadFile(value,file_name){
-          let fileName = file_name;
+          // 03/08/2021 修復文件名包含特殊符號問題: encodeURIComponent() 函数可把字符串作为 URI 组件进行编码
+          let fileName = encodeURIComponent(file_name);
           console.log("file_name->"+fileName);
           let url = requestPath() + "download?attribute=1&fileName="+fileName;
           console.log("url->"+url);
