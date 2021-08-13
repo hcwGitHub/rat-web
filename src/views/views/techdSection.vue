@@ -10,14 +10,14 @@
           <div class="content">
             <span style="font-size: 16px;">Switch to</span>
             <div style="padding-top:12px">
-              <el-button style="width: 62px">M</el-button> <span style="display: inline-block;margin-left: 10px;">Mobility</span>
+              <a href="https://mobility.chunwo.com"><el-button style="width: 62px">M</el-button></a> <span style="display: inline-block;margin-left: 10px;">Mobility</span>
             </div>
-            <div style="padding-top:12px">
+            <!-- <div style="padding-top:12px">
               <el-button>OC</el-button> <span style="display: inline-block;margin-left: 10px;">CW OC</span>
             </div>
            <div style="padding-top:12px">
              <el-button>DC</el-button> <span style="display: inline-block;margin-left: 10px;">CW DC </span>
-           </div>
+           </div> -->
 
 
           </div>
@@ -32,7 +32,7 @@
       </span>
 
       <span style="display: flex; align-items: center;">
-        <el-input
+        <!-- <el-input
           placeholder=""
           suffix-icon="el-icon-search"
           v-model="search">
@@ -56,7 +56,7 @@
           </div>
         </div>
         <el-button style="border: 0" slot="reference"><i style=" font-size:20px;display: inline-block; width: 45px;text-align: center" class="el-icon-bell"></i></el-button>
-      </el-popover>
+      </el-popover> -->
 
 <!--        <i style=" font-size:20px;display: inline-block; width: 45px;text-align: center" class="el-icon-bell"></i>-->
 
@@ -79,7 +79,7 @@
           </router-link>
           <el-button plain @click="loginOut" style="margin-top: 10px;">Log Out</el-button>
 <!--       <el-button size="small" style="background-color: #cc6776" slot="reference" circle>PC</el-button>-->
-          <el-avatar size="medium" slot="reference" style="cursor: pointer; background-color: #cc6776; user-select: none;">{{oc_user_name === 'N' ? 'PC' : oc_user_name}}</el-avatar>
+          <el-avatar size="medium" slot="reference" style="cursor: pointer; background-color: #cc6776; user-select: none; font-size: 12px;">{{oc_user_name === 'N' ? 'PC' : oc_user_name}}</el-avatar>
        </el-popover>
 
       </span>

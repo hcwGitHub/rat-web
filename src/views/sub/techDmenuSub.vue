@@ -48,7 +48,7 @@
                 <el-table-column
                   prop="id"
                   label="ID."
-                  width="150">
+                  width="50">
                 </el-table-column>
 
                 <!--                <el-table-column-->
@@ -65,17 +65,20 @@
                 <el-table-column
                   prop="file_name"
                   label="File Name"
-                  width="150"
                 >
                 </el-table-column>
 
                 <el-table-column
                   prop="create_time_str"
-                  label="CreatedDate">
+                  label="CreatedDate"
+                  width="150"
+                >
                 </el-table-column>
                 <el-table-column
                   prop="creator"
-                  label="Creator">
+                  label="Creator"
+                  width="200"
+                >
                 </el-table-column>
                 <!--                <el-table-column-->
                 <!--                  prop="Dsiplay"-->
@@ -85,7 +88,7 @@
 
                 <el-table-column
                   label="Display"
-                  width="150">
+                  width="100">
                   <!-- 自定义表头  slot="header" slot-scope="scope" -->
                   <template slot="header" slot-scope="scope">
                     Display <el-checkbox @change="(change) => updateALLDisplayStatus(change)"
@@ -174,13 +177,15 @@
                 <el-table-column
                   prop="id"
                   label="ID."
-                  width="150">
+                  width="50">
                 </el-table-column>
 
                 <el-table-column
-                  prop="approve"
                   label="Status"
                   width="150">
+                  <template slot-scope="scope">
+                    <span :class="(scope.row.approve == 'Approved') ? 'statusApproved' : (scope.row.approve == 'Rejected') ? 'statusRejected' : 'status'">{{scope.row.approve}}</span>
+                  </template>
                 </el-table-column>
 
                 <el-table-column
@@ -351,12 +356,14 @@
                 <el-table-column
                   prop="id"
                   label="ID."
-                  width="150">
+                  width="50">
                 </el-table-column>
                 <el-table-column
-                  prop="approve"
                   label="Status"
                   width="150">
+                  <template slot-scope="scope">
+                    <span :class="(scope.row.approve == 'Approved') ? 'statusApproved' : (scope.row.approve == 'Rejected') ? 'statusRejected' : 'status'">{{scope.row.approve}}</span>
+                  </template>
                 </el-table-column>
 
                 <el-table-column
@@ -379,14 +386,12 @@
 
                 <el-table-column
                   prop="project_name"
-                  label="Project Name"
-                  width="150">
+                  label="Project Name">
                 </el-table-column>
 
                 <el-table-column
                   prop="remark"
-                  label="Remarks"
-                  width="150">
+                  label="Remarks">
                 </el-table-column>
 
                 <el-table-column
@@ -488,10 +493,9 @@
         this.$router.push("/");
       }
       // 22/07/2021 新需求: 默認選擇第一個選項
-      let type = [{label:'Templates for "List of Consolidated Action Items" (HP Checklist)'}]
+      let type = [{label:this.editableTabs[0].title}]
       this.findFilesByType(type[0])
-      let searchType = [{name: '1'}]
-      this.search(searchType[0]);
+      this.search(this.editableTabsB[0]); 
     },
     // 22/01/2021 新需求: twc_list, hir_list值發生改變時, 把approve裡的字段轉化成大寫開頭
     watch:{
@@ -1407,5 +1411,18 @@
     padding-top: 20px;
   }
 
+  /deep/ .status {
+    font-weight: bold;
+  }
+
+  /deep/ .statusApproved {
+    font-weight: bold;
+    color: green;
+  }
+
+  /deep/ .statusRejected {
+    font-weight: bold;
+    color: red;
+  }
 
 </style>

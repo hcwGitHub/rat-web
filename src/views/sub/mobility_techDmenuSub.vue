@@ -45,21 +45,24 @@
                 <el-table-column
                   prop="id"
                   label="ID."
-                  width="150">
+                  width="50">
                 </el-table-column>
                 <el-table-column
                   prop="file_name"
                   label="File Name"
-                  width="150"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="create_time_str"
-                  label="CreatedDate">
+                  label="CreatedDate"
+                  width="150"
+                >
                 </el-table-column>
                 <el-table-column
                   prop="creator"
-                  label="Creator">
+                  label="Creator"
+                  width="200"
+                >
                 </el-table-column>
 <!--                <el-table-column-->
 <!--                  prop="Dsiplay"-->
@@ -68,7 +71,7 @@
 <!--                </el-table-column>-->
 
                 <el-table-column
-                  label=""
+                  label="Action"
                   width="150">
                   <template slot-scope="scope">
 <!--                    <el-button @click="" type="text" size="small">View</el-button>-->
@@ -135,13 +138,15 @@
                 <el-table-column
                   prop="id"
                   label="ID."
-                  width="150">
+                  width="50">
                 </el-table-column>
 
                 <el-table-column
-                  prop="approve"
                   label="Status"
                   width="150">
+                  <template slot-scope="scope">
+                    <span :class="(scope.row.approve == 'Approved') ? 'statusApproved' : (scope.row.approve == 'Rejected') ? 'statusRejected' : 'status'">{{scope.row.approve}}</span>
+                  </template>
                 </el-table-column>
 
                 <el-table-column
@@ -275,12 +280,14 @@
                 <el-table-column
                   prop="id"
                   label="ID."
-                  width="150">
+                  width="50">
                 </el-table-column>
                 <el-table-column
-                  prop="approve"
                   label="Status"
                   width="150">
+                  <template slot-scope="scope">
+                    <span :class="(scope.row.approve == 'Approved') ? 'statusApproved' : (scope.row.approve == 'Rejected') ? 'statusRejected' : 'status'">{{scope.row.approve}}</span>
+                  </template>
                 </el-table-column>
 
                 <el-table-column
@@ -301,14 +308,12 @@
                 </el-table-column>
                 <el-table-column
                   prop="project_name"
-                  label="Project Name"
-                  width="150">
+                  label="Project Name">
                 </el-table-column>
 
                 <el-table-column
                   prop="remark"
-                  label="Remarks"
-                  width="150">
+                  label="Remarks">
                 </el-table-column>
 
                 <el-table-column
@@ -409,14 +414,19 @@
         // delCookie("isLogin");
 
         let _this = this;
-         // 防止頁面跳轉之後, 不會調用window.addEventListener(), 造成tabs 沒有數據
-        let role = window.localStorage.getItem("role");
-        if (role === 'member'){
-          // member ， 無法使用twc
-          this.tabs = this.editableTabsB2;
-        }else if (role === 'manger'){
-          this.tabs = this.editableTabsB;
-        }
+        // 防止頁面跳轉之後, 不會調用window.addEventListener(), 造成tabs 沒有數據
+        // 12/08/2021 修復manger, member兩權限用戶的默認選項卡; 定時器是為了防止: 沒有init完就執行這段代碼, 可能導致默認選項錯亂
+        window.setTimeout(() => {
+          let role = window.localStorage.getItem("role");
+          if (role === 'member'){
+            // member ， 無法使用twc
+            this.tabs = this.editableTabsB2;
+          }else if (role === 'manger'){
+            this.tabs = this.editableTabsB;
+          }
+          this.activeName3 = this.tabs[0].name;
+          this.search(this.tabs[0]);
+        }, 1000);
         // end, 防止一下. 這裏必須使用.
 
         window.addEventListener('message', function(event){
@@ -438,7 +448,7 @@
         let type = [{label:this.editableTabs[0].title}]
         this.findFilesByType(type[0])
         // let searchType = [{name: '1'}]
-        this.search(this.editableTabsB[0]);
+        // this.search(this.editableTabsB[0]);
 
       },
       // 22/01/2021 新需求: twc_list, hir_list值發生改變時, 把approve裡的字段轉化成大寫開頭
@@ -639,9 +649,10 @@
             /*
             * 22/07/2021 新需求: 默認選擇第一個選項
             * 23/07/2021 修復已知bug: 必須等init()完, 才加載以下代碼, 否則projectNo將會默認執行上一個保留的projectNo
+            * 12/08/2021 廢除
             * */
             // let searchType = [{name: '1'}]
-            this.search(this.editableTabsB[0]);
+            // this.search(this.tabs[0]);
 
           }).catch(function (error) { // 请求失败处理
             console.log(error);
@@ -1387,6 +1398,20 @@
   .el-tabs-p{
     padding-left: 42px;
     padding-top:20px;
+  }
+
+  /deep/ .status {
+    font-weight: bold;
+  }
+
+  /deep/ .statusApproved {
+    font-weight: bold;
+    color: green;
+  }
+
+  /deep/ .statusRejected {
+    font-weight: bold;
+    color: red;
   }
 
 
