@@ -378,6 +378,103 @@
 <!--                </el-table-column>-->
 
               </el-table>
+
+              <!-- 30/08/2021新需求: 添加新tap -->
+              <el-table v-if="item.name==='4'"
+                        :data="contact_details_list"
+                        :border="true"
+                        style="width: 100%">
+                <el-table-column
+                  type="index"
+                  label="NO."
+                  width="50">
+                </el-table-column>
+                <el-table-column
+                  prop="id"
+                  label="ID."
+                  width="50">
+                </el-table-column>
+                <el-table-column
+                  label="Status"
+                  width="100">
+                  <template slot-scope="scope">
+                    <span :class="(scope.row.approve == 'Approved') ? 'statusApproved' : (scope.row.approve == 'Rejected') ? 'statusRejected' : 'status'">{{scope.row.approve}}</span>
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  prop="reason_of_rejected"
+                  label="Reason of Rejection"
+                  width="160">
+                </el-table-column>
+
+                <el-table-column
+                  prop="project_no"
+                  label="Project ID"
+                  width="150">
+                </el-table-column>
+
+                <el-table-column
+                  prop="divsion"
+                  label="Division"
+                  width="150">
+                </el-table-column>
+
+                <el-table-column
+                  prop="project_name"
+                  label="Project Name">
+                </el-table-column>
+
+                <el-table-column
+                  prop="capacity"
+                  label="Capacity">
+                </el-table-column>
+
+                <el-table-column
+                  prop="name"
+                  label="Name">
+                </el-table-column>
+
+                <el-table-column
+                  prop="phone_no"
+                  label="Phone No">
+                </el-table-column>
+
+                <el-table-column
+                  prop="email"
+                  label="E-mail">
+                </el-table-column>
+
+                <el-table-column
+                  label="Action"
+                  width="200">
+                  <template slot-scope="scope">
+                    <span slot="footer" class="dialog-footer">
+                    <router-link :to="{name:'viewContactDetail',query:{id:scope.row.id,type:'mobility',identifier:identifier}}">
+                      <el-button @click="" type="text" size="small">View</el-button>
+                      <!--                    <el-button type="text" size="small">编辑</el-button>-->
+                    </router-link>
+                    </span>
+                    <!-- delete -->
+                    <span slot="footer" class="dialog-footer">
+                     <el-button type="text" size="small" @click="delContactDetailsEntry(scope.row.id)">Delete</el-button>
+                    </span>
+                    <!-- update -->
+                    <span slot="footer" class="dialog-footer">
+                    <router-link :to="{name:'editContactDetails',query:{id:scope.row.id,type:'mobility',identifier:identifier}}">
+                      <el-button type="text" size="small">Update</el-button>
+                    </router-link>
+                    </span>
+                    <span slot="footer" class="dialog-footer">
+                    
+                    </span>
+
+                  </template>
+                </el-table-column>
+
+                
+              </el-table>
+
               <!-- 分页 -->
 
               <el-pagination
@@ -467,6 +564,13 @@
               this.hir_list[i].approve = this.firstToUpper(this.hir_list[i].approve);
             }
           })
+        },
+        contact_details_list:function () {
+          this.$nextTick(function () {
+            for (let i = 0; i < this.contact_details_list.length; i++) {
+              this.contact_details_list[i].approve = this.firstToUpper(this.contact_details_list[i].approve);
+            }
+          })
         }
       },
       data() {
@@ -477,8 +581,10 @@
           dialogVisible: false, // 删除file
           dialogVisible2: false, // approve
           dialogVisible3: false, // del entry
+          dialogVisible4: false,
           hir_id:'',
           twc_id:'',
+          contactDetails_id:'',
           // visibleLine:'',
           select_lable:'General Information', // 选项卡选择的模块
           activeName: 'first',
@@ -589,6 +695,10 @@
             title: 'Temporary Works Submission Schedule',
             name: '3',
             content: 'Temporary Works Submission Schedule'
+          }, {
+            title: 'Contact Details of Management Staff, TWC and Engineers',
+            name: '4',
+            content: 'Contact Details of Management Staff, TWC and Engineers'
           }
           ],
 
@@ -601,13 +711,19 @@
             title: 'Temporary Works Submission Schedule',
             name: '3',
             content: 'Temporary Works Submission Schedule'
+          }, {
+            title: 'Contact Details of Management Staff, TWC and Engineers',
+            name: '4',
+            content: 'Contact Details of Management Staff, TWC and Engineers'
           }
           ],
 
           twc_list:[], // twc 数据
           hir_list:[],// hir list
+          contact_details_list: [], // contact details list
           radio:'',
           radio2:'',
+          radio3: '',
 
 
         };
@@ -834,7 +950,38 @@
             }).catch(function (error) { // 请求失败处理
               console.log(error);
             });
-          }
+          }else if(type.name === '4'){
+          console.log("search contact details")
+          // search contact details list
+          let contact_details_url = requestPath() + "searchContactDetails";
+          console.log("request url->" + contact_details_url);
+          // request params
+          let params = {
+            // project_name:this.project_name,
+            project_no:window.localStorage.getItem("projectNo"),
+            page: this.page,
+            page_size: this.page_size
+          };
+          // get
+          this.$axios.get(contact_details_url,
+            {
+              params: params,
+              // headers: {'signature': sign}
+            }
+          ).then(response => {
+            if (response.data.result === "SUCCESS") {
+              console.log("request contact details api success")
+              this.contact_details_list = response.data.contact_details_list;
+              this.pageTotal = response.data.pageTotal;
+              console.log("contact_details_list->" + this.contact_details_list);
+
+            } else {
+              this.$message.error(response.data.msg);
+            }
+          }).catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+        }
 
         },
 
@@ -946,7 +1093,41 @@
             }).catch(function (error) { // 请求失败处理
               console.log(error);
             });
-          }
+          }else if (this.type_name === '4') {
+          console.log("search contact details")
+          // search contact details list
+          let contact_details_url = requestPath() + "searchContactDetails";
+          console.log("request url->" + contact_details_url);
+          // request params
+          // by division,division
+          let params = {
+            // project_name:this.project_name,
+            project_no:window.localStorage.getItem("projectNo"),
+            division:this.division,
+            approve: this.approve,
+            page: this.page,
+            page_size: this.page_size
+          };
+          // get
+          this.$axios.get(contact_details_url,
+            {
+              params: params,
+              // headers: {'signature': sign}
+            }
+          ).then(response => {
+            if (response.data.result === "SUCCESS") {
+              console.log("request contact details api success")
+              this.contact_details_list = response.data.contact_details_list;
+              this.pageTotal = response.data.pageTotal;
+              console.log("contact_details_list->" + this.contact_details_list);
+
+            } else {
+              this.$message.error(response.data.msg);
+            }
+          }).catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+        }
 
         },
 
@@ -1306,6 +1487,56 @@
           });
 
         },
+
+        // del entry by id (contact details)
+      delContactDetailsEntry(_id) {
+        this.$confirm('This operation will permanently delete the file, do you want to continue?', '', {
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          // this.$message({
+          //   type: 'success',
+          //   message: '删除成功!'
+          // });
+          console.log("contact_details_id ->" + _id);
+          let url = requestPath() + "delEntry";
+          console.log("url->" + url);
+          let data = {
+            id: _id,
+            type: "contact_details"
+          }
+          // 打印一下remark info
+          this.$axios.post(url, data, {
+              headers: {
+                // 'signature': sign
+              }
+            }
+          ).then(response => {
+            if (response.data.result === "SUCCESS") {
+              console.log("SUCCESS!!")
+              this.$message({
+                message: 'Successfully modified',
+                type: 'success'
+              });
+              // 刷新数据, this.page 当前页面
+              this.searchPage(this.page);
+
+            } else {
+              this.$message.error(response.data.msg);
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: '已取消删除'
+          // });
+        });
+      },
+
         // 下载文件
         downloadFile(value,file_name){
           // 03/08/2021 修復文件名包含特殊符號問題: encodeURIComponent() 函数可把字符串作为 URI 组件进行编码

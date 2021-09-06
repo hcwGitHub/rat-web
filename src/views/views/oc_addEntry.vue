@@ -155,6 +155,61 @@
           </div>
 
         </div>
+
+        <!-- 第四个选项卡: E-mail List of Management Staff, TWC and Engineers -->
+        <div class="select-1" v-if="selectType==='4'">
+          <div class="main-info">
+            <span class="main-info-type">Divsion</span>
+            <span class="con">
+              <span v-model="rat_contact_details.divsion">{{this.rat_contact_details.divsion}}</span>
+<!--                <el-input v-model="rat_contact_details.divsion" placeholder=""></el-input>-->
+            </span>
+          </div>
+          <div class="main-info">
+            <span class="main-info-type">Project Id.</span>
+            <span class="con">
+              <span v-model="rat_contact_details.project_no">{{this.rat_contact_details.project_no}}</span>
+<!--                <el-input v-model="rat_contact_details.project_no" placeholder=""></el-input>-->
+            </span>
+          </div>
+          <div class="main-info">
+            <span class="main-info-type">Project Name.</span>
+            <span class="con">
+              <span v-model="rat_contact_details.project_name">{{this.rat_contact_details.project_name}}</span>
+<!--                <el-input v-model="rat_contact_details.project_name" placeholder=""></el-input>-->
+            </span>
+          </div>
+          <div class="main-info" style="display: flex;">
+            <span class="main-info-type">Capacity<br><i style="color: #AAAAAA">(More than one box can be ticked)</i></span>
+            <template>
+              <el-checkbox-group v-model="checkList" style="display: inline-block;">
+                <el-checkbox label="Management Staff"></el-checkbox><br>
+                <el-checkbox label="TWC"></el-checkbox><br>
+                <el-checkbox label="Engineer"></el-checkbox><br>
+              </el-checkbox-group>
+            </template>
+          </div>
+          <div class="main-info">
+            <span class="main-info-type">Name</span>
+            <span class="con">
+                <el-input v-model="rat_contact_details.name" placeholder="TEXT"></el-input>
+            </span>
+          </div>
+          <div class="main-info">
+            <span class="main-info-type">Phone No</span>
+            <span class="con">
+                <el-input v-model="rat_contact_details.phone_no" placeholder="number"></el-input>
+            </span>
+          </div>
+          <div class="main-info">
+            <span class="main-info-type">E-mail</span>
+            <span class="con">
+                <el-input v-model="rat_contact_details.email" placeholder="e-mail"></el-input>
+            </span>
+          </div>
+
+        </div>
+
         <div class="main-info-bottom">
 
           <div class="span-info" style="text-align: left; width:100%; padding-top: 30px;font-size: 12px"><span style="font-family: 'Arial Bold', 'Arial', sans-serif;
@@ -229,6 +284,13 @@
           this.rat_hir.project_name = projectName;
           this.rat_hir.creator_email = oc_user_email ; // 發 Email 通知
 
+          // 初始化rat_contact_details
+          this.rat_contact_details.creator = oc_user;
+          this.rat_contact_details.divsion = division;
+          this.rat_contact_details.project_no = projectNo
+          this.rat_contact_details.project_name = projectName;
+          this.rat_contact_details.creator_email = oc_user_email;
+
           // options
            /*let role = window.localStorage.getItem("role");
            this.user_role = role;  // 保存到 user_role
@@ -247,6 +309,10 @@
           return{
             // 21/07/2021 修復郵件鏈接
             identifier:'',
+
+            // 02/09/2021
+            checkList: [],
+            checkListTest:[],
 
             user_role:'member',
             newData:{},
@@ -292,6 +358,23 @@
               creator_email:'', // 對象變更發郵件通知
               creator:'' // 创建者
             },
+            rat_contact_details:{
+              // 21/07/2021 修復郵件鏈接
+              identifier:'',
+
+              type:'',
+              approve:'',
+              divsion:'',
+              project_no:'',
+              project_name:'',
+              attachments:'',
+              capacity:'',
+              name:'',
+              phone_no:'',
+              email:'',
+              creator_email:'', // 對象變更發郵件通知
+              creator:'' // 创建者
+            },
             input:'',
             selectType:"",
             tabs:'',
@@ -308,6 +391,10 @@
               title: 'Temporary Works Submission Schedule',
               name: '3',
               content: 'Temporary Works Submission Schedule'
+            },{
+              title: 'Contact Details of Management Staff, TWC and Engineers',
+              name: '4',
+              content: 'Contact Details of Management Staff, TWC and Engineers'
             }
             ],
 
@@ -335,9 +422,11 @@
           // upload files and create entry twc/hir
         submitEntry(){
 
+          // this.checkListTest = capacity.split(',');
+
           var upData = new FormData();
           this.$refs.upload.submit();
-          if(this.file === undefined || this.file.length <= 0){
+          if(this.file === undefined || this.file.length <= 0 && this.selectType != '4'){
             this.$message({
               message: 'Please select the file! ',
             });
@@ -354,7 +443,8 @@
           console.log("upData->"+upData)
           let _this = this;
           this.fullscreenLoading = true;
-          this.$axios.post(url, upData, {
+          if (this.file.length > 0) {
+            this.$axios.post(url, upData, {
               headers: {
                 // 'signature': sign
                 // "Content-Type":'multipart/form-data'
@@ -479,6 +569,46 @@
           }).catch(function (error) {
             console.log(error);
           });
+          }
+          // setTimeout 防止文件未上传完成, 就执行以下代码(导致attachments空值)
+          window.setTimeout(() => {
+            if (this.selectType === '4') {
+            // contact details
+            let url = requestPath() + "addContactDetailsEntry";
+            console.log("url->"+url);
+            this.rat_contact_details.type = 'Contact Details of Management Staff, TWC and Engineers', // contact details type;
+            this.rat_contact_details.attachments = this.file_name;
+            // 把当前复选框的数组join成带有,号的字符串
+            this.rat_contact_details.capacity = this.checkList.join();
+            console.log(this.rat_contact_details.capacity);
+            console.log("rat_contact_details->", this.rat_contact_details);
+            // 21/07/2021 修復郵件鏈接
+            this.rat_contact_details.identifier = this.identifier;
+
+            this.$axios.post(url, this.rat_contact_details, {
+                headers: {
+                  // 'signature': sign
+                }
+              }
+            ).then(response => {
+              if (response.data.result === "SUCCESS") {
+                this.fullscreenLoading = false;
+                console.log("SUCCESS!!")
+                this.$message({
+                  message: 'Created Contact Details entry successfully',
+                  type: 'success'
+                });
+                // 获取oc entry and file list
+                this.$router.push('/techdSection');
+
+              } else {
+                this.$message.error(response.data.msg);
+              }
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }
+          }, 1000);
 
 
         },
@@ -536,5 +666,8 @@
     padding-left: 30px;
   }
 
+  .el-checkbox {
+    margin-bottom: 10px;
+  }
 
 </style>

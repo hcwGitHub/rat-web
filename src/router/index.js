@@ -48,6 +48,12 @@ export const constantRouter = [
     name: 'viewTwcDetail',
     component: () => import('@/views/views/viewTwcDetail')
   },
+  // view Twc detail
+  {
+    path: '/viewContactDetail',
+    name: 'viewContactDetail',
+    component: () => import('@/views/views/viewContactDetail')
+  },
   // edit Hir
   {
     path: '/editHir',
@@ -59,6 +65,12 @@ export const constantRouter = [
     path: '/editTwc',
     name: 'editTwc',
     component: () => import('@/views/views/editTwc')
+  },
+  // edit Contact Details
+  {
+    path: '/editContactDetails',
+    name: 'editContactDetails',
+    component: () => import('@/views/views/editContactDetails')
   },
   // add entry
   {
@@ -153,6 +165,21 @@ export const constantRouter = [
     ]
   },
 
+  {
+    path: '/techdSection4',
+    name: 'techdSection4',
+    component: () => import('@/views/views/techdSection'),
+    redirect: '/techdSection4/viewContactDetail',
+    children: [
+      // 查看view detail
+      {
+        path: 'viewContactDetail',
+        name: 'viewContactDetail',
+        component: () => import('@/views/views/viewContactDetail')
+      },
+    ]
+  },
+
   // edit twc
   {
     path: '/editTwc2',
@@ -180,6 +207,21 @@ export const constantRouter = [
         path: 'editHir',
         name: 'editHir',
         component: () => import('@/views/views/editHir')
+      },
+    ]
+  },
+
+  {
+    path: '/editContactDetails2',
+    name: 'editContactDetails2',
+    component: () => import('@/views/views/techdSection'),
+    redirect: '/editContactDetails2/editContactDetails',
+    children: [
+      // 查看view detail
+      {
+        path: 'editContactDetails',
+        name: 'editContactDetails',
+        component: () => import('@/views/views/editContactDetails')
       },
     ]
   },
