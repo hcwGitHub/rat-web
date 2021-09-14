@@ -862,6 +862,8 @@
             let params = {
               project_name:this.project_name,
               project_id:'',
+              division:this.division,
+              approve: this.approve,
               page:this.page,
               page_size:this.page_size
             };
@@ -896,6 +898,8 @@
             let params = {
               // project_name:this.project_name,
               project_no:window.localStorage.getItem("projectNo"),
+              division:this.division,
+              approve: this.approve,
               page:this.page,
               page_size:this.page_size
             };
@@ -928,6 +932,8 @@
             let params = {
               // project_name:this.project_name,
               project_no:window.localStorage.getItem("projectNo"),
+              division:this.division,
+              approve: this.approve,
               page:this.page,
               page_size:this.page_size
             };
@@ -959,6 +965,8 @@
           let params = {
             // project_name:this.project_name,
             project_no:window.localStorage.getItem("projectNo"),
+            division:this.division,
+            approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };

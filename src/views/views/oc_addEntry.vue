@@ -17,7 +17,7 @@
               <!--
                    暂时使用 placeholder="Select Entry Type"  先, 有需求再改
                -->
-              <el-select  v-model="selectType"  placeholder="Select Entry Type">
+              <el-select  v-model="selectType"  placeholder="Select Entry Type" @change="changeAttachmentsName">
                 <el-option  v-for="item in tabs" :label="item.title" :value="item.name"></el-option>
               </el-select>
 
@@ -214,7 +214,7 @@
 
           <div class="span-info" style="text-align: left; width:100%; padding-top: 30px;font-size: 12px"><span style="font-family: 'Arial Bold', 'Arial', sans-serif;
     font-weight: 700;
-    font-style: normal;font-size: 14px">Attachments</span></div>
+    font-style: normal;font-size: 14px">Attachments</span><br><i style="color: #AAAAAA" v-text="attachments"></i></div>
           <!--分割线 -->
           <div class="divider" style="width: 743px;"> <el-divider></el-divider></div>
           <div class="upload">
@@ -313,6 +313,8 @@
             // 02/09/2021
             checkList: [],
             checkListTest:[],
+
+            attachments:'',
 
             user_role:'member',
             newData:{},
@@ -416,6 +418,18 @@
           }
         },
       methods: {
+        // 07/09/2021 新增Attachment附近注意字眼
+        changeAttachmentsName(val) {
+          if (val === '1') {
+            this.attachments = 'Please Upload the "Graduation Certificates of TWC", "Professional Qualification Certificates of TWC", as well as "Signed MEMO for Appointment of TWC" as per Appendix F of RAT Mechanism Rev. 2.0';
+          } else if (val === '2') {
+            this.attachments = 'Please Upload the "HIR with Proposed RAT Meetings" as per Appendix A of RAT Mechanism Rev. 2.0';
+          } else if (val === '3') {
+            this.attachments = 'Please Upload the "Temporary Works Submission Schedule"';
+          } else {
+            this.attachments = '';
+          }
+        },
         httpRequest(param) {
           this.file.push(param.file);
         },

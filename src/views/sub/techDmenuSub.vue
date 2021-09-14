@@ -157,6 +157,15 @@
               <!--{{this.rat_twc.division}}-->
             </span>
 
+            <el-input
+              placeholder="Project Id"
+              v-model="input_projectId"
+              clearable style="width:217px;"
+              @keydown.enter.native="search_projectId">
+            </el-input>
+
+            <el-button @click="search_projectId">Search</el-button>
+
             <!-- <span class="con" v-show="type_name == '4'">
                    <el-select  @change="searchPage(1)" v-model="approve" placeholder="division">
                      <el-option  v-for="item in userApproves" :label="item.content" :value="item.title"></el-option>
@@ -801,6 +810,8 @@
         radio2:'',
         radio3: '',
 
+        input_projectId:'',
+
 
       };
     },
@@ -845,10 +856,15 @@
           let params = {
             project_name: this.project_name,
             project_id:'',
+            division:this.division,
+            approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
-          params.project_id = window.localStorage.getItem("projectNo");
+          // params.project_id = window.localStorage.getItem("projectNo");
+          if (this.input_projectId !== "") {
+            params.project_id = this.input_projectId;
+          }
           console.log( " projectNo-> "+ window.localStorage.getItem("projectNo"));
           // get
           this.$axios.get(twc_url,
@@ -878,10 +894,15 @@
           // request params
           let params = {
             // project_name:this.project_name,
-            project_no:window.localStorage.getItem("projectNo"),
+            project_no:'',
+            division:this.division,
+            approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
+          if (this.input_projectId !== "") {
+            params.project_no = this.input_projectId;
+          }
           // get
           this.$axios.get(hir_url,
             {
@@ -909,10 +930,15 @@
           // request params
           let params = {
             // project_name:this.project_name,
-            project_no:window.localStorage.getItem("projectNo"),
+            project_no:'',
+            division:this.division,
+            approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
+          if (this.input_projectId !== "") {
+            params.project_no = this.input_projectId;
+          }
           // get
           this.$axios.get(hir_url,
             {
@@ -940,10 +966,15 @@
           // request params
           let params = {
             // project_name:this.project_name,
-            project_no:window.localStorage.getItem("projectNo"),
+            project_no:'',
+            division:this.division,
+            approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
+          if (this.input_projectId !== "") {
+            params.project_no = this.input_projectId;
+          }
           // get
           this.$axios.get(contact_details_url,
             {
@@ -1051,8 +1082,11 @@
             page: this.page,
             page_size: this.page_size
           };
-          params.project_id = window.localStorage.getItem("projectNo");
-          console.log( " projectNo-> "+ window.localStorage.getItem("projectNo"));
+          if (this.input_projectId !== "") {
+            params.project_id = this.input_projectId;
+          }
+          // console.log( " projectNo-> "+ window.localStorage.getItem("projectNo"));
+          console.log("projectId->" + params.project_id);
           // get
           this.$axios.get(twc_url,
             {
@@ -1081,12 +1115,16 @@
           // by division,division
           let params = {
             // project_name:this.project_name,
-            project_no:window.localStorage.getItem("projectNo"),
+            project_no:'',
             division:this.division,
             approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
+          if (this.input_projectId !== "") {
+            params.project_no = this.input_projectId;
+          }
+          console.log("projectId->" + params.project_no);
           // get
           this.$axios.get(hir_url,
             {
@@ -1115,12 +1153,16 @@
           // by division,division
           let params = {
             // project_name:this.project_name,
-            project_no:window.localStorage.getItem("projectNo"),
+            project_no:'',
             division:this.division,
             approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
+          if (this.input_projectId !== "") {
+            params.project_no = this.input_projectId;
+          }
+          console.log("projectId->" + params.project_no);
           // get
           this.$axios.get(hir_url,
             {
@@ -1149,12 +1191,17 @@
           // by division,division
           let params = {
             // project_name:this.project_name,
-            project_no:window.localStorage.getItem("projectNo"),
+            project_no:'',
             division:this.division,
             approve: this.approve,
             page: this.page,
             page_size: this.page_size
           };
+          if (this.input_projectId !== "") {
+            params.project_no = this.input_projectId;
+          }
+          console.log("projectId->" + params.project_no);
+          
           // get
           this.$axios.get(contact_details_url,
             {
@@ -1634,6 +1681,10 @@
         });
 
       },
+
+      search_projectId() {
+        this.searchPage(1);
+      }
     }
   }
 </script>
