@@ -248,8 +248,8 @@
               month: nowDate.getMonth() + 1,
               date: nowDate.getDate(),
             }
-            const newmonth = date.month>10?date.month:'0'+date.month
-            const day = date.date>10?date.date:'0'+date.date
+            const newmonth = date.month>=10?date.month:'0'+date.month
+            const day = date.date>=10?date.date:'0'+date.date
             let systemDate = date.year + '-' + newmonth + '-' + day
             return systemDate;
           }
