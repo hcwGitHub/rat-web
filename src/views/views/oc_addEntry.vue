@@ -11,26 +11,40 @@
         <div class="main-info">
           <span>Basic Information</span>
         </div>
-        <div class="main-info">
+        <!--<div class="main-info">
           <span class="main-info-type">Type</span>
           <span class="con">
-              <!--
+              &lt;!&ndash;
                    暂时使用 placeholder="Select Entry Type"  先, 有需求再改
-               -->
-              <el-select  v-model="selectType"  placeholder="Select Entry Type" @change="changeAttachmentsName">
+               &ndash;&gt;
+              <el-select  v-model="formValue.selectType"  placeholder="Select Entry Type" @change="changeAttachmentsName">
                 <el-option  v-for="item in tabs" :label="item.title" :value="item.name"></el-option>
               </el-select>
 
-<!--             <el-select v-if="user_role==='member'" v-model="selectType" placeholder="HIR with proposed RAT meetings">-->
-<!--                <el-option  v-for="item in tabs" :label="item.title" :value="item.name"></el-option>-->
-<!--              </el-select>-->
+&lt;!&ndash;             <el-select v-if="user_role==='member'" v-model="formValue.selectType" placeholder="HIR with proposed RAT meetings">&ndash;&gt;
+&lt;!&ndash;                <el-option  v-for="item in tabs" :label="item.title" :value="item.name"></el-option>&ndash;&gt;
+&lt;!&ndash;              </el-select>&ndash;&gt;
 
           </span>
-        </div>
+        </div>-->
+
+        <!-- 选项为必填 -->
+        <el-form :model="formValue" ref="formValue" :label-position="labelPosition" label-width="30%" class="main-info">
+          <el-form-item
+            label="Type"
+            prop="selectType"
+            :rules="[
+            { required: true, message: 'Please select the type'},]"
+          >
+            <el-select  v-model="formValue.selectType"  placeholder="Select Entry Type" @change="changeAttachmentsName">
+              <el-option  v-for="item in tabs" :label="item.title" :value="item.name"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
 
         <!-- 第一个选项卡,as:Detail Information of TWC -->
 
-        <div class="select-1"  v-if="selectType==='1'">
+        <div class="select-1"  v-if="formValue.selectType==='1'">
           <div class="main-info">
             <span class="main-info-type">Project</span>
             <span class="con">
@@ -124,7 +138,7 @@
         </div>
 
         <!-- 第2个选项卡,as:Detail Information of hir -->
-        <div class="select-1" v-if="selectType==='2' || selectType==='3'">
+        <div class="select-1" v-if="formValue.selectType==='2' || formValue.selectType==='3'">
           <div class="main-info">
             <span class="main-info-type">Divsion</span>
             <span class="con">
@@ -157,7 +171,7 @@
         </div>
 
         <!-- 第四个选项卡: E-mail List of Management Staff, TWC and Engineers -->
-        <div class="select-1" v-if="selectType==='4'">
+        <div class="select-1" v-if="formValue.selectType==='4'">
           <div class="main-info">
             <span class="main-info-type">Divsion</span>
             <span class="con">
@@ -233,7 +247,7 @@
             </el-upload>
           </div>
           <div class="button_commit" style="text-align: left;padding-top: 10px;">
-            <el-button @click="submitEntry" style="background-color: #1c68a4;color: white" v-loading.fullscreen.lock="fullscreenLoading"><i class="el-icon-check" style="padding-right:5px; "></i>Create</el-button>
+            <el-button @click="submitEntry('formValue')" style="background-color: #1c68a4;color: white" v-loading.fullscreen.lock="fullscreenLoading"><i class="el-icon-check" style="padding-right:5px; "></i>Create</el-button>
             <router-link to="/techdSection">
               <el-button>Cancel</el-button>
             </router-link>
@@ -300,7 +314,7 @@
            }else{
              // options 不能有twc 创建按钮
              this.tabs = this.editableTabsB2;
-             // this.selectType = 2; // 选择2，hir
+             // this.formValue.selectType = 2; // 选择2，hir
            }*/
            this.tabs = this.editableTabsB;
 
@@ -378,6 +392,10 @@
               creator:'' // 创建者
             },
             input:'',
+            formValue: {
+              selectType:"",
+            },
+            labelPosition: 'left',
             selectType:"",
             tabs:'',
             // 给manger 客户使用
@@ -434,58 +452,175 @@
           this.file.push(param.file);
         },
           // upload files and create entry twc/hir
-        submitEntry(){
+        submitEntry(formName){
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              // this.checkListTest = capacity.split(',');
 
-          // this.checkListTest = capacity.split(',');
-
-          var upData = new FormData();
-          this.$refs.upload.submit();
-          if(this.file === undefined || this.file.length <= 0 && this.selectType != '4'){
-            this.$message({
-              message: 'Please select the file! ',
-            });
-            return;
-          }
-          this.file.forEach(function (file) {
-            upData.append('myfiles', file, file.name);
-            // upData.append('file', this.file);
-          })
-          this.newData.attribute = 0; // entry files set attribute = 0;
-          upData.append("attribute", JSON.stringify(this.newData.attribute));
-          let url = requestPath() + "uploadFiles";
-          console.log("url->" + url);
-          console.log("upData->"+upData)
-          let _this = this;
-          this.fullscreenLoading = true;
-          if (this.file.length > 0) {
-            this.$axios.post(url, upData, {
-              headers: {
-                // 'signature': sign
-                // "Content-Type":'multipart/form-data'
+              var upData = new FormData();
+              this.$refs.upload.submit();
+              if(this.file === undefined || this.file.length <= 0 && this.formValue.selectType != '4'){
+                this.$message({
+                  message: 'Please select the file! ',
+                });
+                return;
               }
-            }
-          ).then(response => {
-            if (response.data.result === "SUCCESS") {
-              console.log("request success!!")
-              this.file_name = response.data.file_name;
-              console.log("file_name->"+ this.file_name);
-              // 这里重新设置file
-              this.file = [];
+              this.file.forEach(function (file) {
+                upData.append('myfiles', file, file.name);
+                // upData.append('file', this.file);
+              })
+              this.newData.attribute = 0; // entry files set attribute = 0;
+              upData.append("attribute", JSON.stringify(this.newData.attribute));
+              let url = requestPath() + "uploadFiles";
+              console.log("url->" + url);
+              console.log("upData->"+upData)
+              let _this = this;
+              this.fullscreenLoading = true;
+              if (this.file.length > 0) {
+                this.$axios.post(url, upData, {
+                    headers: {
+                      // 'signature': sign
+                      // "Content-Type":'multipart/form-data'
+                    }
+                  }
+                ).then(response => {
+                  if (response.data.result === "SUCCESS") {
+                    console.log("request success!!")
+                    this.file_name = response.data.file_name;
+                    console.log("file_name->"+ this.file_name);
+                    // 这里重新设置file
+                    this.file = [];
 
-              // 成功之后, 在保存entry 信息
-              // upload file and create entry
-              if (this.selectType==='1'){
-                  //twc
-                  console.log('selectTYpe->'+ this.selectType);
-                  let url = requestPath() + "addTwcEntry";
+                    // 成功之后, 在保存entry 信息
+                    // upload file and create entry
+                    if (this.formValue.selectType==='1'){
+                      //twc
+                      console.log('selectTYpe->'+ this.formValue.selectType);
+                      let url = requestPath() + "addTwcEntry";
+                      console.log("url->"+url);
+                      this.rat_twc.type = 'Detail Information of Twc',
+                        this.rat_twc.attachments = this.file_name;
+                      console.log("rat_twc->" + this.rat_twc.remark);
+                      // 21/07/2021 修復郵件鏈接
+                      this.rat_twc.identifier = this.identifier;
+
+                      this.$axios.post(url, this.rat_twc, {
+                          headers: {
+                            // 'signature': sign
+                          }
+                        }
+                      ).then(response => {
+                        if (response.data.result === "SUCCESS") {
+                          this.fullscreenLoading = false;
+                          console.log("SUCCESS!!")
+                          this.$message({
+                            message: 'Created Twc entry successfully',
+                            type: 'success'
+                          });
+                          // 获取oc entry and file list
+                          this.$router.push('/techdSection');
+
+                        } else {
+                          this.fullscreenLoading = false;
+                          this.$message.error(response.data.msg);
+                        }
+                      }).catch(function (error) {
+                        console.log(error);
+                      });
+
+                    } else if (this.formValue.selectType === '2'){
+                      // hir
+                      let url = requestPath() + "addHirEntry";
+                      console.log("url->"+url);
+                      this.rat_hir.type = 'HIR with proposed RAT meetings', // hir type;
+                        this.rat_hir.attachments = this.file_name;
+                      console.log("rat_hir->" + this.rat_hir);
+                      // 21/07/2021 修復郵件鏈接
+                      this.rat_hir.identifier = this.identifier;
+
+                      this.$axios.post(url, this.rat_hir, {
+                          headers: {
+                            // 'signature': sign
+                          }
+                        }
+                      ).then(response => {
+                        if (response.data.result === "SUCCESS") {
+                          this.fullscreenLoading = false;
+                          console.log("SUCCESS!!")
+                          this.$message({
+                            message: 'Created Hir entry successfully',
+                            type: 'success'
+                          });
+                          // 获取oc entry and file list
+                          this.$router.push('/techdSection');
+
+                        } else {
+                          this.fullscreenLoading = false;
+                          this.$message.error(response.data.msg);
+                        }
+                      }).catch(function (error) {
+                        console.log(error);
+                      });
+
+                    }else if (this.formValue.selectType === '3'){
+                      // hir temp（hir copy ）
+                      let url = requestPath() + "addHirTempEntry";
+                      console.log("url->"+url);
+                      this.rat_hir.type = 'Temporary Works Submission Schedule', // hir type;
+                        this.rat_hir.attachments = this.file_name;
+                      console.log("rat_hir->" + this.rat_hir);
+                      // 21/07/2021 修復郵件鏈接
+                      this.rat_hir.identifier = this.identifier;
+
+                      this.$axios.post(url, this.rat_hir, {
+                          headers: {
+                            // 'signature': sign
+                          }
+                        }
+                      ).then(response => {
+                        if (response.data.result === "SUCCESS") {
+                          this.fullscreenLoading = false;
+                          console.log("SUCCESS!!")
+                          this.$message({
+                            message: 'Created Hir entry successfully',
+                            type: 'success'
+                          });
+                          // 获取oc entry and file list
+                          this.$router.push('/techdSection');
+
+                        } else {
+                          this.$message.error(response.data.msg);
+                        }
+                      }).catch(function (error) {
+                        console.log(error);
+                      });
+
+                    }
+
+
+                  } else {
+                    this.$message.error(response.data.msg);
+                  }
+                }).catch(function (error) {
+                  console.log(error);
+                });
+              }
+              // setTimeout 防止文件未上传完成, 就执行以下代码(导致attachments空值)
+              window.setTimeout(() => {
+                if (this.formValue.selectType === '4') {
+                  // contact details
+                  let url = requestPath() + "addContactDetailsEntry";
                   console.log("url->"+url);
-                  this.rat_twc.type = 'Detail Information of Twc',
-                  this.rat_twc.attachments = this.file_name;
-                  console.log("rat_twc->" + this.rat_twc.remark);
+                  this.rat_contact_details.type = 'Contact Details of Management Staff, TWC and Engineers', // contact details type;
+                    this.rat_contact_details.attachments = this.file_name;
+                  // 把当前复选框的数组join成带有,号的字符串
+                  this.rat_contact_details.capacity = this.checkList.join();
+                  console.log(this.rat_contact_details.capacity);
+                  console.log("rat_contact_details->", this.rat_contact_details);
                   // 21/07/2021 修復郵件鏈接
-                  this.rat_twc.identifier = this.identifier;
+                  this.rat_contact_details.identifier = this.identifier;
 
-                  this.$axios.post(url, this.rat_twc, {
+                  this.$axios.post(url, this.rat_contact_details, {
                       headers: {
                         // 'signature': sign
                       }
@@ -495,134 +630,28 @@
                       this.fullscreenLoading = false;
                       console.log("SUCCESS!!")
                       this.$message({
-                        message: 'Created Twc entry successfully',
+                        message: 'Created Contact Details entry successfully',
                         type: 'success'
                       });
                       // 获取oc entry and file list
                       this.$router.push('/techdSection');
 
                     } else {
+                      this.fullscreenLoading = false;
                       this.$message.error(response.data.msg);
                     }
                   }).catch(function (error) {
                     console.log(error);
                   });
-
-              } else if (this.selectType === '2'){
-                // hir
-                let url = requestPath() + "addHirEntry";
-                console.log("url->"+url);
-                this.rat_hir.type = 'HIR with proposed RAT meetings', // hir type;
-                this.rat_hir.attachments = this.file_name;
-                console.log("rat_hir->" + this.rat_hir);
-                // 21/07/2021 修復郵件鏈接
-                this.rat_hir.identifier = this.identifier;
-
-                this.$axios.post(url, this.rat_hir, {
-                    headers: {
-                      // 'signature': sign
-                    }
-                  }
-                ).then(response => {
-                  if (response.data.result === "SUCCESS") {
-                    this.fullscreenLoading = false;
-                    console.log("SUCCESS!!")
-                    this.$message({
-                      message: 'Created Hir entry successfully',
-                      type: 'success'
-                    });
-                    // 获取oc entry and file list
-                    this.$router.push('/techdSection');
-
-                  } else {
-                    this.$message.error(response.data.msg);
-                  }
-                }).catch(function (error) {
-                  console.log(error);
-                });
-
-              }else if (this.selectType === '3'){
-                // hir temp（hir copy ）
-                let url = requestPath() + "addHirTempEntry";
-                console.log("url->"+url);
-                this.rat_hir.type = 'Temporary Works Submission Schedule', // hir type;
-                  this.rat_hir.attachments = this.file_name;
-                console.log("rat_hir->" + this.rat_hir);
-                // 21/07/2021 修復郵件鏈接
-                this.rat_hir.identifier = this.identifier;
-
-                this.$axios.post(url, this.rat_hir, {
-                    headers: {
-                      // 'signature': sign
-                    }
-                  }
-                ).then(response => {
-                  if (response.data.result === "SUCCESS") {
-                    this.fullscreenLoading = false;
-                    console.log("SUCCESS!!")
-                    this.$message({
-                      message: 'Created Hir entry successfully',
-                      type: 'success'
-                    });
-                    // 获取oc entry and file list
-                    this.$router.push('/techdSection');
-
-                  } else {
-                    this.$message.error(response.data.msg);
-                  }
-                }).catch(function (error) {
-                  console.log(error);
-                });
-
-              }
-
-
-            } else {
-              this.$message.error(response.data.msg);
-            }
-          }).catch(function (error) {
-            console.log(error);
-          });
-          }
-          // setTimeout 防止文件未上传完成, 就执行以下代码(导致attachments空值)
-          window.setTimeout(() => {
-            if (this.selectType === '4') {
-            // contact details
-            let url = requestPath() + "addContactDetailsEntry";
-            console.log("url->"+url);
-            this.rat_contact_details.type = 'Contact Details of Management Staff, TWC and Engineers', // contact details type;
-            this.rat_contact_details.attachments = this.file_name;
-            // 把当前复选框的数组join成带有,号的字符串
-            this.rat_contact_details.capacity = this.checkList.join();
-            console.log(this.rat_contact_details.capacity);
-            console.log("rat_contact_details->", this.rat_contact_details);
-            // 21/07/2021 修復郵件鏈接
-            this.rat_contact_details.identifier = this.identifier;
-
-            this.$axios.post(url, this.rat_contact_details, {
-                headers: {
-                  // 'signature': sign
                 }
-              }
-            ).then(response => {
-              if (response.data.result === "SUCCESS") {
-                this.fullscreenLoading = false;
-                console.log("SUCCESS!!")
-                this.$message({
-                  message: 'Created Contact Details entry successfully',
-                  type: 'success'
-                });
-                // 获取oc entry and file list
-                this.$router.push('/techdSection');
+              }, 1000);
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          })
 
-              } else {
-                this.$message.error(response.data.msg);
-              }
-            }).catch(function (error) {
-              console.log(error);
-            });
-          }
-          }, 1000);
+
 
 
         },
