@@ -197,7 +197,7 @@
 
       <!-- Attachments -->
 
-      <div class="attachments">
+      <div class="attachments" v-if="this.type === 'oc' || (this.userEmail === this.rat_twc.email)">
         <el-card shadow="always" v-loading="loading">
           <div class="attachment-info"><span style="font-family: 'Arial', sans-serif;
       font-weight: 700;font-size: 14px">Attachments</span>
@@ -325,6 +325,10 @@
         }
       }
 
+      if (this.type === 'mobility') {
+        this.userEmail = window.localStorage.getItem("user_email");
+      }
+
       let _this = this;
       window.setTimeout(function () {
         _this.findTwcByid();
@@ -333,6 +337,7 @@
     },
     data() {
       return {
+        userEmail:'',
         // 21/07/2021 修復郵件鏈接
         identifier:'',
         twc_remark:'',
